@@ -38,7 +38,7 @@ int main() {
 
     std::cout << "-------------------------------------------\n";
     std::cout << " Welcome to Zorn, a text adventure game!\n";
-    while (choiceInvalid == true){
+    while (choiceInvalid){
         std::cout << "-------------------------------------------\n";
         std::cout << "1. Start Game\n";
         std::cout << "2. Exit\n";
@@ -195,10 +195,10 @@ int main() {
                 gameOver = true;
             }
         }
+        int choice = 0;
         switch (currentArea) {
             case 0:
                 clearScreen();
-                int choice;
                 while (choice != 1 && choice != 2) {
                     std::cout << "You find yourself back at the statue of the wolf, with the paths to the left and right still before you.\n";
                     std::cout << "-------------------------------------------\n"

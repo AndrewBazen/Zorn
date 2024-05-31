@@ -1,7 +1,11 @@
 #include "utilities.h"
 
 void clearScreen() {
-    system("clear");
+    try {
+        if (system("cls")) system("clear");
+    } catch (...) {
+        std::cout << "Error clearing screen." << std::endl;
+    }
 }
 
 void printSlow(std::string text) {

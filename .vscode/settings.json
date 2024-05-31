@@ -1,4 +1,5 @@
 {
+    "terminal.integrated.shellArgsk": ["-noexit", "chcp 65001; $SHELL"],
     "files.associations": {
         "__bit_reference": "cpp",
         "__config": "cpp",
