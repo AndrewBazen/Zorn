@@ -157,21 +157,21 @@ int main() {
             printSlow("You have found all 3 artifacts of power, and are ready to face the darkness that threatens to consume Zorn.\n"
             "You make your way to the heart of the forest, where the evil that lurks in the shadows awaits.\n"
             "You feel a sense of dread and fear as you approach, but you know that you must be strong and face your fears.\n"
-            "You take a deep breath, and step forward into the darkness.\n");
-            std::cout << "Press any key to continue...";
+            "You take a deep breath, and step forward into the darkness.\n"
+            "Press any key to continue...\n");
             system("read");
             break;
         } else if (currentTurn == 10) {
             clearScreen();
             printSlow("You have been wandering for hours, but you can't seem to find your way out of the forest.\n"
-            "You feel a strong presence growing closer, and the hairs on the back of your neck begin to stand up.\n");
-            std::cout << "Press any key to continue...";
+            "You feel a strong presence growing closer, and the hairs on the back of your neck begin to stand up.\n"
+            "Press any key to continue...\n");
             system("read");
         } else if (currentTurn == 20) {
             clearScreen();
             printSlow("You have been wandering for hours, but you can't seem to find your way out of the forest.\n"
-            "You feel a strong presence growing much closer, you hear a long deep howl in the distance and feel as though you are being watched.\n");
-            std::cout << "Press any key to continue...";
+            "You feel a strong presence growing much closer, you hear a long deep howl in the distance and feel as though you are being watched.\n"
+            "Press any key to continue...\n");
             system("read");
         } else if (currentTurn >= 30 && currentTurn % 3 == 0) {
             clearScreen();
@@ -182,14 +182,13 @@ int main() {
             if (brilliantCrystalFound && usesLeft > 0) {
                 printSlow(" but you feel the power of the artifact start to vibrate.\n"
                 "You hold it up and the wolf recoils in fear, its eyes wide with terror.\n"
-                "You feel a surge of power as the darkness is pushed back, and the wolf howls in pain before disappearing into the shadows.\n");
-                std::cout << "Press any key to continue...";
+                "You feel a surge of power as the darkness is pushed back, and the wolf howls in pain before disappearing into the shadows.\n"
+                "Press any key to continue...\n");
                 system("read");
                 usesLeft--;
             } else {
                 printSlow(" and you feel the darkness start to consume you. As the wolf begins to devour your flesh.\n");
                 printRedAndSlow("Game Over\n");
-                std::this_thread::sleep_for(std::chrono::seconds(2));
                 std::cout << "Press any key to continue...";
                 system("read");
                 gameOver = true;
@@ -281,7 +280,7 @@ int main() {
                     printSlow("You are back in the area with the stream and stepping stones.\n");
                     std::cout << "-------------------------------------------\n"
                     "1. cross the stream and continue.\n"
-                    "2. Go back the way you came."
+                    "2. Go back the way you came.\n"
                     "-------------------------------------------\n"
                     "What do you do: ";
                     int choice;
@@ -311,9 +310,12 @@ int main() {
                 }
                 break;
             case 3:
-                previousArea = 3;
-                currentArea = 2;
-                std::cout << "You are in area 3\n";
+                printSlow("As you walk along the path, you begin to see a soft\n"
+                "orange glow in the distance. As you get closer, you can hear the sound of a crackling fire.\n"
+                "You come to a split in the path with a small campfire burning in the center.\n"
+                "A figure sits by the fire, their face hidden in the shadows. A crooked and knotted sign\n"
+                "points to the left, with the words 'The Path of the Warrior' written on it. To the right,\n"
+                "a sign reads 'The Path of the Scholar'.\n");
                 break;
             case 4:
                 std::cout << "You are in area 4\n";

@@ -1,0 +1,115 @@
+#include "campfireriddle.h"
+
+int campfireRiddle() {
+    std::vector<std::string> questions = {"Ask who the lord is", "Ask what happened to them", "Ask which path to take"};
+    bool leaveFire = false;
+    bool leaveFigure = false;
+    bool gameOver = false;
+    bool pathChosen = false;
+    int result = 0;
+    clearScreen();
+    printSlow("As you walk along the path, you begin to see a soft\n"
+        "orange glow in the distance. As you get closer, you can hear the sound of a crackling fire.\n"
+        "You come to a split in the path with a small campfire burning in the center.\n"
+        "A figure sits by the fire, their face hidden in the shadows. A crooked and knotted sign\n"
+        "points to the left, with the words 'The Path of the Warrior' written on it. To the right,\n"
+        "a sign reads 'The Path of the Scholar'.\n");
+
+    while (!pathChosen && !gameOver && !leaveFire) {
+        std::cout << "-------------------------------------------\n"
+        "1. Approach the figure\n"
+        "2. Sit by the campfire\n"
+        "3. take the path of the warrior\n"
+        "4. take the path of the scholar\n"
+        "5. Leave the campfire and go back\n"
+        "-------------------------------------------\n"
+        "What do you do: ";
+
+        int choice;
+        std::cin >> choice;
+        switch (choice) {
+            case 1:
+                clearScreen();
+                printSlow("You approach the figure by the fire, and as you get closer, you see that it's\n"
+                "proportions are all wrong. It's limbs are too long, and it's head is too large to be a person.\n"
+                "you can now see that under the hood, there is a slight gleam of sharp teeth and beast-like eyes.\n"
+                "The figure does not move, but you feel a sense of unease wash over you.\n");
+                printRedAndSlow("Come no closer, I fear I may not be able to control myself..\n"
+                "I was once like you, but now I am something else entirely. Forever changed by the lord of this realm.\n"
+                "you may ask me three questions, but be warned, my answers may not be what you seek.\n");
+                while (questions > 0 && !leaveFigure) {
+                    std::cout << "-------------------------------------------\n";
+                    for (int i = 0; i < questions.size(); i++) {
+                        std::cout << i + 1 << ". " << questions[i] << "\n";
+                    }
+                    std::cout << "4. try to move past the figure\n"
+                    "-------------------------------------------\n";
+                    int questionChoice;
+                    std::cin >> questionChoice;
+                    switch (questionChoice) {
+                        case 1:
+                            clearScreen();
+                            printSlow("You ask the figure who the lord of the realm is, and it make an otherworldly chuckle.\n");
+                            printRedAndSlow("The eternal night, the darkness when you close your eyes. the   \n");
+                            questions.erase(questions.begin());
+                            break;
+                        case 2:
+                            clearScreen();
+                            printSlow("You ask the figure what happened to them, and it's eyes seem to flash from under the hood.\n");
+                            printRedAndSlow("Cruel is the fate that awaits the cowardly.  Forever wandering in the dark and never seeking to fight.\n"
+                            "The lord holds out his hand, and the coward takes it, never to return to the light.\n");
+                            questions.erase(questions.begin() + 1);
+                            break;
+                        case 3:
+                            clearScreen();
+                            printSlow("You ask the figure which path to take, and the figure speaks in a low, raspy voice,\n");
+                            printRedAndSlow("A question for a question, which is mightier, the sword or the pen?\n"
+                            "For with a sword you may write your own destiny, and with a pen you may strike down your foes.\n"
+                            "Choose wisely, traveler, for only the brave and the wise may pass.\n");
+                            std::cout << "-------------------------------------------\n"
+                            "1. The sword\n"
+                            "2. The pen\n"
+                            "3. Neither\n"
+                            "-------------------------------------------\n"
+                            "What do you choose: ";
+                            int riddleChoice;
+                            std::cin >> riddleChoice;
+                            switch (riddleChoice) {
+                                case 1:
+                                    clearScreen();
+                                    printSlow("You choose the sword, and the figure smiles a wicked smile, letting you see the terrifying teeth.\n"
+                                    "The figures body begins to crack and distort as it transforms before you into a hulking werewolf with bright red eyes.\n");
+                                    printRedAndSlow("Unwise is the man who forsakes the pen for the sword.\n");
+                                    printSlow("The werewolf lunges at you, and the darkness takes you as you feel the pain of being ripped apart.\n");
+                                    gameOver = true;
+                                    break;
+                                case 2:
+                                    clearScreen();
+                                    printSlow("You choose the pen, and the figure smiles a wicked smile, letting you see the terrifying teeth.\n"
+                                    "The figures body begins to crack and distort as it transforms before you into a hulking werewolf with bright red eyes.\n");
+                                    printRedAndSlow("cowardly is the man who forsakes the sword for the pen.\n");
+                                    printSlow("The werewolf lunges at you, and the darkness takes you as you feel the pain of being ripped apart.\n");
+                                    gameOver = true;
+                                    break;
+                                case 3:
+                                    clearScreen();
+                                    printSlow("You choose neither, and the figure's posture seems to soften a bit\n");
+                                    printRedAndSlow("A fine choice, traveler. Wise is the man who knows the swords edge and brave is the man who knows the reach of the pen.\n");
+                                    break;
+                                default:
+                                    std::cout << "Invalid choice. Please try again.\n";
+                                    break;
+                            }
+
+
+
+                            
+
+
+
+
+                break;
+            case 2:
+                clearScreen();
+                printSlow("You sit by the campfire, feeling the warmth of the flames on your face.\n"
+                "The figure by the fire turns to you, their eyes glowing with an otherworldly light.\n"

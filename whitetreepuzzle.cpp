@@ -3,15 +3,17 @@
 int whiteTreePuzzle() {
     std::vector<int> treeChoices;
     bool leaveTrees = false;
+    bool gameOver = false;
+    bool puzzleSolved = false;
     int result = 0;
     int puzzleChances = 3;
     clearScreen();
     printSlow("You find yourself in a small clearing with three pure-white leafless trees in the center.\n"
     "The trees are arranged in a triangle, with a small pedestal in the center.\n"
     "On the pedestal, there is a silver bowl filled to the brim with a dark red liquid.\n");
-    bool puzzleSolved = false;
+    
 
-    while (puzzleSolved == false) {
+    while (!puzzleSolved && !gameOver) {
         std::cout << "-------------------------------------------\n"
         "1. Drink the liquid\n"
         "2. Examine the trees\n"
@@ -30,7 +32,6 @@ int whiteTreePuzzle() {
                 "You feel a sudden sense of dread, and know that you have made a grave mistake. Pain grips your entire body as you begin to cough and choke on the blood.\n"
                 "you fall to the ground, your vision blurring as the darkness consumes you.\n");
                 printRedAndSlow("Game Over\n");
-                std::this_thread::sleep_for(std::chrono::seconds(2));
                 std::cout << "press any key to continue...";
                 system("read");
                 puzzleSolved = true;
@@ -40,8 +41,8 @@ int whiteTreePuzzle() {
                 printSlow("You examine the trees, and notice that each tree has a small symbol carved into its trunk.\n"
                 "The first tree has a crescent moon, the second tree has a sun, and the third tree has a star.\n"
                 "You feel a sense of connection to the symbols, and know that they hold the key to the puzzle.\n");
-                
-                while (puzzleChances > 0 && leaveTrees == false) {
+                leaveTrees = false;
+                while (puzzleChances > 0 && !leaveTrees) {
                     std::cout << treeChoices.size() << "\n";
                     std::cout << "-------------------------------------------\n"
                     "1. Touch the first tree\n"
@@ -96,6 +97,7 @@ int whiteTreePuzzle() {
                             }
                         case 4:
                             clearScreen();
+                            printSlow("you leave the trees, and you are back in front of the pedestal.\n");
                             leaveTrees = true;
                             break;
                         default:
@@ -103,7 +105,7 @@ int whiteTreePuzzle() {
                             break;
                     }
                 }
-                if (puzzleChances == 3 && leaveTrees == false) {
+                if (puzzleChances == 0 && !leaveTrees) {
                     clearScreen();
                     printSlow("The trees go dark and the ground beneath you begins to shake violently and crack beneath you.\n");
                     printRedAndSlow("You are unable to get away as you fall to darkness.\n"
@@ -123,7 +125,7 @@ int whiteTreePuzzle() {
             case 4:
                 clearScreen();
                 printSlow("You decide to leave the clearing and continue on your journey.\n");
-                result = 1;
+                result = 2;
                 break;
             default:
                 std::cout << "Invalid choice. Please try again.\n";
