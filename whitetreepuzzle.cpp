@@ -1,13 +1,13 @@
 #include "whitetreepuzzle.h"
 
-int whiteTreePuzzle() {
+int whiteTreePuzzle(int currentTurn) {
     std::vector<int> treeChoices;
     bool leaveTrees = false;
     bool gameOver = false;
     bool puzzleSolved = false;
     int result = 0;
     int puzzleChances = 3;
-    clearScreen();
+    clearScreen(currentTurn);
     printSlow("You find yourself in a small clearing with three pure-white leafless trees in the center.\n"
     "The trees are arranged in a triangle, with a small pedestal in the center.\n"
     "On the pedestal, there is a silver bowl filled to the brim with a dark red liquid.\n");
@@ -26,7 +26,7 @@ int whiteTreePuzzle() {
         std::cin >> choice;
         switch (choice) {
             case 1:
-                clearScreen();
+                clearScreen(currentTurn);
                 printSlow("You take a sip of the liquid, and feel a warm sensation spread through your body.\n"
                 "it tastes warm and sweet like the juice of a fruit, but as you look down at your self, you notice that the liquid on your hands is deep red blood.\n"
                 "You feel a sudden sense of dread, and know that you have made a grave mistake. Pain grips your entire body as you begin to cough and choke on the blood.\n"
@@ -37,7 +37,7 @@ int whiteTreePuzzle() {
                 puzzleSolved = true;
                 break;
             case 2:
-                clearScreen();
+                clearScreen(currentTurn);
                 printSlow("You examine the trees, and notice that each tree has a small symbol carved into its trunk.\n"
                 "The first tree has a crescent moon, the second tree has a sun, and the third tree has a star.\n"
                 "You feel a sense of connection to the symbols, and know that they hold the key to the puzzle.\n");
@@ -96,7 +96,7 @@ int whiteTreePuzzle() {
                                 break;
                             }
                         case 4:
-                            clearScreen();
+                            clearScreen(currentTurn);
                             printSlow("you leave the trees, and you are back in front of the pedestal.\n");
                             leaveTrees = true;
                             break;
@@ -106,7 +106,7 @@ int whiteTreePuzzle() {
                     }
                 }
                 if (puzzleChances == 0 && !leaveTrees) {
-                    clearScreen();
+                    clearScreen(currentTurn);
                     printSlow("The trees go dark and the ground beneath you begins to shake violently and crack beneath you.\n");
                     printRedAndSlow("You are unable to get away as you fall to darkness.\n"
                     "Game Over\n");
@@ -117,13 +117,13 @@ int whiteTreePuzzle() {
                 }
                 break;
             case 3:
-                clearScreen();
+                clearScreen(currentTurn);
                 printSlow("You examine the pedestal, and notice that there is a small inscription carved into the base.\n"
                 "It reads: 'To find the light, follow the path of the stars, and the eternal night will be banished.'\n"
                 "You feel a sense of understanding, and know that the answer lies in the symbols on the trees.\n");
                 break;
             case 4:
-                clearScreen();
+                clearScreen(currentTurn);
                 printSlow("You decide to leave the clearing and continue on your journey.\n");
                 result = 2;
                 break;

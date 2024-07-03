@@ -5,7 +5,7 @@
 
 
 
-void clearScreen();
+void clearScreen(int);
 
 void printSlow(std::string);
 

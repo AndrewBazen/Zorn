@@ -7,4 +7,4 @@
 #include <vector>
 #include "utilities.h"
 
-int campfireRiddle();
+int campfireRiddle(int);

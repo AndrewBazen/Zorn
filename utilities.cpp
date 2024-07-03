@@ -1,11 +1,12 @@
 #include "utilities.h"
 
-void clearScreen() {
+void clearScreen(int currentTurn) {
     try {
         if (system("cls")) system("clear");
     } catch (...) {
         std::cout << "Error clearing screen." << std::endl;
     }
+    std::cout << "                                                   Turn: " << currentTurn << std::endl;
 }
 
 void printSlow(std::string text) {

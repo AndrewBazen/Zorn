@@ -1,6 +1,6 @@
 #include "streampuzzle.h"
 
-int streamPuzzle() {
+int streamPuzzle(int currentTurn) {
     std::vector<int> streamChoices;
     std::vector<int> correctPattern = {2,1,1,2,1};  // the solution to the puzzle
     bool leaveStream = false;
@@ -9,7 +9,7 @@ int streamPuzzle() {
     bool puzzleSolved = false;
     bool puzzleStarted = false;
     bool firstJumpBad = true;
-    clearScreen();
+    clearScreen(currentTurn);
     printSlow("After traveling for what feels like hours, you find yourself at a stream that cuts through the path.\n"
     "The stream is too deep and fast to wade through and it is too wide to jump directly across.\n"
     "There is a small wooden sign off to the edge of the path that has some words written on it, and you can now see\n"
@@ -60,13 +60,13 @@ int streamPuzzle() {
                             "The darkness surrounds you and the icy cold water saps your energy and everything goes dark\n");
                             puzzleChances--;
                             if (puzzleChances != 0) {
-                                clearScreen();
+                                clearScreen(currentTurn);
                                 printSlow("You gasp and cough spitting up water as you come to.  Somehow, you find yourself back on the path\n"
                                 "beside the wooden sign that you saw earlier.\n");
                                 puzzleStarted = false;
                             }
                         } else {
-                            clearScreen();
+                            clearScreen(currentTurn);
                             printSlow("The stone holds firm as you land on top of it.\n");
                             for (int i = 1; i < correctPattern.size(); i++) {
                                 if (puzzleStarted == false) {
@@ -88,7 +88,7 @@ int streamPuzzle() {
                                             "The darkness surrounds you and the icy cold water saps your energy and everything goes dark\n");
                                             puzzleChances--;
                                             if (puzzleChances != 0) {
-                                                clearScreen();
+                                                clearScreen(currentTurn);
                                                 printSlow("You gasp and cough spitting up water as you come to.  Somehow, you find yourself back on the path\n"
                                                 "beside the wooden sign that you saw earlier.\n");
                                                 puzzleStarted = false;
@@ -109,7 +109,7 @@ int streamPuzzle() {
                                             "The darkness surrounds you and the icy cold water saps your energy and everything goes dark\n");
                                             puzzleChances--;
                                             if (puzzleChances != 0) {
-                                                clearScreen();
+                                                clearScreen(currentTurn);
                                                 printSlow("You gasp and cough spitting up water as you come to.  Somehow, you find yourself back on the path\n"
                                                 "beside the wooden sign that you saw earlier.\n");
                                                 puzzleStarted = false;
@@ -140,7 +140,7 @@ int streamPuzzle() {
                 }
                 break;
             case 2:
-                clearScreen();
+                clearScreen(currentTurn);
                 printSlow("the wooden sign seems to have some sort of poem written on it.  It reads..\n"
                 "      dark and cold the River flows, ominously the trees Leaves blow\n"
 	            "      Look below the surface found, a helping hand, solid and Round\n"

@@ -8,4 +8,4 @@
 #include "utilities.h"
 
 
-int whiteTreePuzzle();
+int whiteTreePuzzle(int);
