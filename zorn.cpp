@@ -3,7 +3,9 @@
 #include <cstdlib>
 #include <vector>
 #include "utilities.h"
+#include "choices.h"
 #include "whitetreepuzzle.h"
+#include "campfireriddle.h"
 #include "streampuzzle.h"
 
 
@@ -11,12 +13,19 @@ int main() {
 
     int choiceInvalid = true;
     int currentArea = 0;
+    int previousArea = 0;
     int currentTurn = 0;
+    int startPathChoice = 0;
+    int startPathReturnChoice = 0;
+    bool pathChosen = false;
+    bool moveOn = false;
+    bool paperAndBagTaken = false;
     bool gameOver = false;
     bool allArtifactsFound = false;
     bool brilliantCrystalFound = false;
     bool area1Solved = false;
     bool area2Solved = false;
+    bool campfireRiddleSolved = false;
     bool ancientTomeFound = false;
     bool swordOfLightFound = false;
     std::vector<std::string> bag = {"Dagger"};
@@ -36,28 +45,18 @@ int main() {
 
     std::cout << "-------------------------------------------\n";
     std::cout << " Welcome to Zorn, a text adventure game!\n";
-    while (choiceInvalid){
-        std::cout << "-------------------------------------------\n";
-        std::cout << "1. Start Game\n";
-        std::cout << "2. Exit\n";
-        std::cout << "-------------------------------------------\n";
-        std::cout << "Enter your choice: ";
-
-        int choice;
-        std::cin >> choice;
-        switch (choice) {
-            case 1:
-                std::cout << "You have chosen to start the game!\n";
-                choiceInvalid = false;
-                break;
-            case 2:
-                std::cout << "You have chosen to exit the game!\n";
-                std::cout << "Goodbye!\n";
-                return 0;
-            default:
-                std::cout << "Invalid choice. Please try again.\n";
-                break;
-        }
+    int mainMenuChoice = makeChoice(mainMenuChoices, currentTurn);
+    switch (mainMenuChoice) {
+        case 1:
+            std::cout << "You have chosen to start the game!\n";
+            break;
+        case 2:
+            std::cout << "You have chosen to exit the game!\n";
+            std::cout << "Goodbye!\n";
+            return 0;
+        default:
+            std::cout << "Invalid choice. Please try again.\n";
+            break;
     }
     
     clearScreen(currentTurn);
@@ -65,28 +64,14 @@ int main() {
         "You have no memory of how you got here, or where you are.\n"
         "You see a path leading to the left, which seems to be giving off a soft white glow, and a path leading to the right, which looks dark frightening.\n"
         "Directly in front of you, there is a small statue of a wolf, in it's mouth are a piece of paper, and a small bag.\n");
-    bool pathChosen = false;
-    bool moveOn = false;
-    bool paperAndBagTaken = false;
+
     while(pathChosen == false) {
-        std::cout << "-------------------------------------------\n";
         if (!paperAndBagTaken) {
-            std::cout << "1. Take the paper and bag\n"
-            "2. Take the path to the left\n"
-            "3. Take the path to the right\n"
-            "-------------------------------------------\n"
-            "What do you do: ";
+            int startPathChoice = makeChoice(startAreaChoices, currentTurn);
         } else {
-            std::cout << "1. Continue\n"
-            "2. Take the path to the left\n"
-            "3. Take the path to the right\n"
-            "-------------------------------------------\n"
-            "What do you do: ";
+            int startPathChoice = makeChoice(startAreaChoicesTaken, currentTurn);
         }
-    
-        int choice;
-        std::cin >> choice;
-        switch (choice) {
+        switch (startPathChoice) {
             case 1:
                 paperAndBagTaken = true;
                 clearScreen(currentTurn);
@@ -95,16 +80,8 @@ int main() {
                 "You manage to take the paper and bag.\n");
                 
                 while (moveOn == false) {
-                    std::cout << "-------------------------------------------\n"
-                    "1. Read the paper\n"
-                    "2. Open the bag\n"
-                    "3. Continue\n";
-                    std::cout << "-------------------------------------------\n"
-                    "What do you do: ";
-
-                    int choice2;
-                    std::cin >> choice2;
-                    switch (choice2) {
+                    int paperBagChoice = makeChoice(paperBagChoices, currentTurn);
+                    switch (paperBagChoice) {
                         case 1:
                             clearScreen(currentTurn);
                             printSlow("You open the paper and read the following:\n"
@@ -124,9 +101,6 @@ int main() {
                             printSlow("You decide to leave the statue behind and continue on your journey.\n");
                             moveOn = true;
                             break;
-                        default:
-                            std::cout << "Invalid choice. Please try again.\n";
-                            break;
                     }
                 }
                 break;
@@ -142,13 +116,8 @@ int main() {
                 std::cout << "You have chosen to take the path to the right\n";
                 pathChosen = true;
                 break;
-            default:
-                std::cout << "Invalid choice. Please try again.\n";
-                break;
         }
     }
-    currentTurn = 0;
-    int previousArea = 0;
     while (gameOver == false) {
         if (allArtifactsFound) {
             clearScreen(currentTurn);
@@ -187,30 +156,22 @@ int main() {
             } else {
                 printSlow(" and you feel the darkness start to consume you. As the wolf begins to devour your flesh.\n");
                 printRedAndSlow("Game Over\n");
-                std::cout << "Press any key to continue...";
+                std::cout << "Press any key to continue...\n";
                 system("read");
                 gameOver = true;
             }
         }
-        int choice = 0;
         switch (currentArea) {
             case 0:
                 clearScreen(currentTurn);
-                while (choice != 1 && choice != 2) {
-                    std::cout << "You find yourself back at the statue of the wolf, with the paths to the left and right still before you.\n";
-                    std::cout << "-------------------------------------------\n"
-                    "1. Take the path to the left\n"
-                    "2. Take the path to the right\n"
-                    "-------------------------------------------\n"
-                    "What do you do: ";
-                    std::cin >> choice;
-                    if (choice == 1) {
-                        currentArea = 1;
-                    } else if (choice == 2) {
+                    std::cout << "You find yourself back at the statue of the wolf\n";
+                    startPathReturnChoice = makeChoice(startAreaChoicesReturn, currentTurn);
+                    if (startPathReturnChoice == 1) {
                         currentArea = 2;
-                    } else {
-                        std::cout << "Invalid choice. Please try again.\n";
-                    }
+                        previousArea = 0;
+                    } else if (startPathReturnChoice == 2) {
+                        currentArea = 1;
+                        previousArea = 0;
                 }
                 currentTurn++;
                 break;
@@ -238,21 +199,13 @@ int main() {
                 } else {  // If the puzzle has been solved
                     clearScreen(currentTurn);
                     printSlow("You are back in the clearing with the white trees and the pedestal, which is now empty.\n");
-                    std::cout << "-------------------------------------------\n"
-                    "1. leave the clearing\n"
-                    "-------------------------------------------\n"
-                    "What do you do: ";
-                    int choice;
-                    std::cin >> choice;
-                    switch (choice) {
+                    int whiteTreeReturnChoice = makeChoice(whiteTreeChoicesReturn, currentTurn);
+                    switch (whiteTreeReturnChoice) {
                         case 1:
                             clearScreen(currentTurn);
                             printSlow("You decide to leave the clearing and continue on your journey.\n");
                             currentArea = 0;
                             previousArea = 1;
-                            break;
-                        default:
-                            std::cout << "Invalid choice. Please try again.\n";
                             break;
                     }
                     currentTurn++;
@@ -308,12 +261,125 @@ int main() {
                 }
                 break;
             case 3:
-                printSlow("As you walk along the path, you begin to see a soft\n"
-                "orange glow in the distance. As you get closer, you can hear the sound of a crackling fire.\n"
-                "You come to a split in the path with a small campfire burning in the center.\n"
-                "A figure sits by the fire, their face hidden in the shadows. A crooked and knotted sign\n"
-                "points to the left, with the words 'The Path of the Warrior' written on it. To the right,\n"
-                "a sign reads 'The Path of the Scholar'.\n");
+                if (campfireRiddleSolved) {
+                    clearScreen(currentTurn);
+                    printSlow("You are back at the campfire, but the figure is no longer there.\n"
+                    "The fire crackles and pops, and you feel a sense of peace and warmth.\n");
+                    if (previousArea == 2){
+                        std::cout << "-------------------------------------------\n"
+                        "1. Leave the campfire and go back the way you came.\n"
+                        "2. Take the path of the warrior.\n"
+                        "3. Take the path of the scholar.\n"
+                        "-------------------------------------------\n"
+                        "What do you do: ";
+                        int choice;
+                        std::cin >> choice;
+                        switch (choice) {
+                            case 1:
+                                clearScreen(currentTurn);
+                                printSlow("You decide to leave the campfire and go back the way you came.\n");
+                                currentArea = previousArea;
+                                previousArea = 3;
+                                break;
+                            case 2:
+                                clearScreen(currentTurn);
+                                printSlow("You decide to take the path of the warrior.\n");
+                                currentArea = 4;
+                                previousArea = 3;
+                                break;
+                            case 3:
+                                clearScreen(currentTurn);
+                                printSlow("You decide to take the path of the scholar.\n");
+                                currentArea = 5;
+                                previousArea = 3;
+                                break;
+                            default:
+                                std::cout << "Invalid choice. Please try again.\n";
+                                break;
+                        }
+                    } else if (previousArea == 5) {
+                        std::cout << "-------------------------------------------\n"
+                        "1. Leave the campfire and continue.\n"
+                        "2. Take the path of the warrior.\n"
+                        "3. Leave the campfire and go back the way you came.\n"
+                        "-------------------------------------------\n"
+                        "What do you do: ";
+                        int choice;
+                        std::cin >> choice;
+                        switch (choice) {
+                            case 1:
+                                clearScreen(currentTurn);
+                                printSlow("You decide to leave the campfire and continue on your journey.\n");
+                                currentArea = 2;
+                                previousArea = 3;
+                                break;
+                            case 2:
+                                clearScreen(currentTurn);
+                                printSlow("You decide to take the path of the warrior.\n");
+                                currentArea = 4;
+                                previousArea = 3;
+                                break;
+                            case 3:
+                                clearScreen(currentTurn);
+                                printSlow("You decide to leave the campfire and go back the way you came.\n");
+                                currentArea = previousArea;
+                                previousArea = 3;
+                                break;
+                            default:
+                                std::cout << "Invalid choice. Please try again.\n";
+                                break;
+                        }
+                    } else if (previousArea == 4) {
+                        std::cout << "-------------------------------------------\n"
+                        "1. Leave the campfire and continue.\n"
+                        "2. Take the path of the scholar.\n"
+                        "3. Leave the campfire and go back the way you came.\n"
+                        "-------------------------------------------\n"
+                        "What do you do: ";
+                        int choice;
+                        std::cin >> choice;
+                        switch (choice) {
+                            case 1:
+                                clearScreen(currentTurn);
+                                printSlow("You decide to leave the campfire and continue on your journey.\n");
+                                currentArea = 2;
+                                previousArea = 3;
+                                break;
+                            case 2:
+                                clearScreen(currentTurn);
+                                printSlow("You decide to take the path of the scholar.\n");
+                                currentArea = 5;
+                                previousArea = 3;
+                                break;
+                            case 3:
+                                clearScreen(currentTurn);
+                                printSlow("You decide to leave the campfire and go back the way you came.\n");
+                                currentArea = previousArea;
+                                previousArea = 3;
+                                break;
+                            default:
+                                std::cout << "Invalid choice. Please try again.\n";
+                                break;
+                        }
+                    }
+                    currentTurn++;
+                    break;
+                } else {
+                    int result = campfireRiddle(currentTurn);
+                    if (result == 0) {
+                        gameOver = true;
+                    } else if (result == 1) {
+                        campfireRiddleSolved = true;
+                        currentArea = 3;
+                        previousArea = 2;
+                        bag.push_back("Ancient Tome");
+                    } else if (result == 2) {
+                        currentArea = previousArea;
+                        previousArea = 3;
+                    }
+                    currentTurn++;
+                    break;
+                }
                 break;
             case 4:
                 std::cout << "You are in area 4\n";

@@ -6,7 +6,11 @@ int campfireRiddle(int currentTurn) {
     bool leaveFigure = false;
     bool gameOver = false;
     bool pathChosen = false;
+    bool goBack = false;
     int result = 0;
+    int campfireChoice = 0;
+    int questionChoice = 0;
+    int riddleChoice = 0;
     clearScreen(currentTurn);
     printSlow("As you walk along the path, you begin to see a soft\n"
         "orange glow in the distance. As you get closer, you can hear the sound of a crackling fire.\n"
@@ -16,18 +20,8 @@ int campfireRiddle(int currentTurn) {
         "a sign reads 'The Path of the Scholar'.\n");
 
     while (!pathChosen && !gameOver && !leaveFire) {
-        std::cout << "-------------------------------------------\n"
-        "1. Approach the figure\n"
-        "2. Sit by the campfire\n"
-        "3. take the path of the warrior\n"
-        "4. take the path of the scholar\n"
-        "5. Leave the campfire and go back\n"
-        "-------------------------------------------\n"
-        "What do you do: ";
-
-        int choice;
-        std::cin >> choice;
-        switch (choice) {
+        campfireChoice = makeChoice(campfireChoices, currentTurn);
+        switch (campfireChoice) {
             case 1:
                 clearScreen(currentTurn);
                 printSlow("You approach the figure by the fire, and as you get closer, you see that it's\n"
@@ -37,28 +31,19 @@ int campfireRiddle(int currentTurn) {
                 printRedAndSlow("Come no closer, I fear I may not be able to control myself..\n"
                 "I was once like you, but now I am something else entirely. Forever changed by the lord of this realm.\n"
                 "you may ask me three questions, but be warned, my answers may not be what you seek.\n");
-                while (questions.size() > 0 && !leaveFigure) {
-                    std::cout << "-------------------------------------------\n";
-                    for (int i = 0; i < questions.size(); i++) {
-                        std::cout << i + 1 << ". " << questions[i] << "\n";
-                    }
-                    std::cout << "4. try to move past the figure\n"
-                    "-------------------------------------------\n";
-                    int questionChoice;
-                    std::cin >> questionChoice;
+                while (!leaveFigure) {
+                    questionChoice = makeChoice(figureChoices, currentTurn);
                     switch (questionChoice) {
                         case 1:
                             clearScreen(currentTurn);
                             printSlow("You ask the figure who the lord of the realm is, and it make an otherworldly chuckle.\n");
                             printRedAndSlow("The eternal night, the darkness when you close your eyes...\n");
-                            questions.erase(questions.begin());
                             break;
                         case 2:
                             clearScreen(currentTurn);
                             printSlow("You ask the figure what happened to them, and it's eyes seem to flash from under the hood.\n");
                             printRedAndSlow("Cruel is the fate that awaits the cowardly.  Forever wandering in the dark and never seeking to fight.\n"
                             "The lord holds out his hand, and the coward takes it, never to return to the light.\n");
-                            questions.erase(questions.begin() + 1);
                             break;
                         case 3:
                             clearScreen(currentTurn);
@@ -66,14 +51,7 @@ int campfireRiddle(int currentTurn) {
                             printRedAndSlow("A question for a question, which is mightier, the sword or the pen?\n"
                             "For with a sword you may write your own destiny, and with a pen you may strike down your foes.\n"
                             "Choose wisely, traveler, for only the brave and the wise may pass.\n");
-                            std::cout << "-------------------------------------------\n"
-                            "1. The sword\n"
-                            "2. The pen\n"
-                            "3. Neither\n"
-                            "-------------------------------------------\n"
-                            "What do you choose: ";
-                            int riddleChoice;
-                            std::cin >> riddleChoice;
+                            riddleChoice = makeChoice(figureAnswerChoices, currentTurn);
                             switch (riddleChoice) {
                                 case 1:
                                     clearScreen(currentTurn);
@@ -95,6 +73,7 @@ int campfireRiddle(int currentTurn) {
                                     clearScreen(currentTurn);
                                     printSlow("You choose neither, and the figure's posture seems to soften a bit\n");
                                     printRedAndSlow("A fine choice, traveler. Wise is the man who knows the swords edge and brave is the man who knows the reach of the pen.\n");
+                                    result = 1;
                                     break;
                                 default:
                                     std::cout << "Invalid choice. Please try again.\n";
@@ -107,8 +86,44 @@ int campfireRiddle(int currentTurn) {
             case 2:
                 clearScreen(currentTurn);
                 printSlow("You sit by the campfire, feeling the warmth of the flames on your face.\n"
-                "The figure by the fire turns to you, their eyes glowing with an otherworldly light.\n");
-                break; 
+                "The figure does not move, but you feel its gaze resting upon you.\n"
+                "The fire crackles and pops, and in the coals, you think you see shapes moving.\n");
+                goBack = false;
+                while (!goBack) {
+                    std::cout << "-------------------------------------------\n";
+                    std::cout << "1. look deeper into the fire\n"
+                    "2. get up from the campfire\n"
+                    "-------------------------------------------\n"
+                    "What do you do: ";
+                    int fireChoice;
+                    std::cin >> fireChoice;
+                    switch (fireChoice) {
+                        case 1:
+                            clearScreen(currentTurn);
+                            printSlow("You look deeper into the fire, and the shapes in the coals seem to grow more defined.\n"
+                            "You see a wolf, chasing a rabbit through the woods. You continue to watch as the rabbit\n"
+                            "is caught and devoured by the wolf. The fire crackles and pops, and the shapes fade away.\n"
+                            "as you look away from the fire, you feel a sense of worry as you realize that more time has passed than you thought.\n");
+                            currentTurn++;
+                            break;
+                        case 2:
+                            clearScreen(currentTurn);
+                            printSlow("You decide to get up from the campfire.\n");
+                            goBack = true;
+                            break;
+                        default:
+                            std::cout << "Invalid choice. Please try again.\n";
+                            break;
+                    }
+                }
+                break;
+            case 3:
+                clearScreen(currentTurn);
+                printSlow("You decide to leave the campfire and go back the way you came.\n"
+                "The figure by the fire watches you go, it's eyes following you until you are out of sight.\n");
+                leaveFire = true;
+                result = 2;
+                break;
             default:
                 std::cout << "Invalid choice. Please try again.\n";
                 break;
