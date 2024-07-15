@@ -2,9 +2,7 @@
 #include <chrono>
 #include <thread>
 #include <cstdlib>
-#include "choices.h"
-
-
+#include <array>
 
 void clearScreen(int);
 

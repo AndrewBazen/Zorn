@@ -1,35 +1,79 @@
-#include <iostream>
-#include <string>
-#include <cstdlib>
-#include <vector>
-#include "utilities.h"
-#include "choices.h"
 #include "whitetreepuzzle.h"
 #include "campfireriddle.h"
 #include "streampuzzle.h"
+#include "utilities.h"
 
 
 int main() {
-
     int choiceInvalid = true;
     int currentArea = 0;
     int previousArea = 0;
     int currentTurn = 0;
     int startPathChoice = 0;
     int startPathReturnChoice = 0;
+    int paperBagChoice = 0;
+    int whiteTreeReturnChoice = 0;
+    int streamReturnChoice = 0;
     bool pathChosen = false;
     bool moveOn = false;
     bool paperAndBagTaken = false;
     bool gameOver = false;
     bool allArtifactsFound = false;
     bool brilliantCrystalFound = false;
-    bool area1Solved = false;
-    bool area2Solved = false;
+    bool whiteTreeAreaSolved = false;
+    bool streamAreaSolved= false;
     bool campfireRiddleSolved = false;
     bool ancientTomeFound = false;
     bool swordOfLightFound = false;
     std::vector<std::string> bag = {"Dagger"};
     int usesLeft = 3;
+
+    std::vector<std::string> mainMenuChoices = {
+        "New Game", 
+        "Quit"
+    };
+    std::vector<std::string> startAreaChoices = {
+        "Take the paper and bag",
+        "Take the path to the left",
+        "Take the path to the right"
+    };
+    std::vector<std::string> paperBagChoices = {
+        "Read the paper",
+        "Open the bag",
+        "Continue"
+    };
+    std::vector<std::string> startAreaChoicesTaken = {
+        "Continue",
+        "Take the path to the left",
+        "Take the path to the right"
+    };
+    std::vector<std::string> startAreaChoicesReturn = {
+        "Continue",
+        "Go back the way you came"
+    };
+
+    std::vector<std::string> whiteTreeChoices = {
+        "Approach the tree",
+        "Leave the clearing and go back"
+    };
+
+    std::vector<std::string> whiteTreeChoicesReturn = {
+        "leave the clearing and go back"
+    };
+
+    std::vector<std::string> whiteTreeChoicesApproach = {
+        "Touch the tree",
+        "Leave the clearing and go back"
+    };
+
+    std::vector<std::string> streamChoices = {
+
+    };
+
+    std::vector<std::string> streamChoicesReturn = {
+        "Leave the stream and go back"
+    };
+
     
     std::cout << "\n"
         "▒███████▒ ▒█████   ██▀███   ███▄    █\n"
@@ -67,9 +111,9 @@ int main() {
 
     while(pathChosen == false) {
         if (!paperAndBagTaken) {
-            int startPathChoice = makeChoice(startAreaChoices, currentTurn);
+            startPathChoice = makeChoice(startAreaChoices, currentTurn);
         } else {
-            int startPathChoice = makeChoice(startAreaChoicesTaken, currentTurn);
+            startPathChoice = makeChoice(startAreaChoicesTaken, currentTurn);
         }
         switch (startPathChoice) {
             case 1:
@@ -80,7 +124,7 @@ int main() {
                 "You manage to take the paper and bag.\n");
                 
                 while (moveOn == false) {
-                    int paperBagChoice = makeChoice(paperBagChoices, currentTurn);
+                    paperBagChoice = makeChoice(paperBagChoices, currentTurn);
                     switch (paperBagChoice) {
                         case 1:
                             clearScreen(currentTurn);
@@ -177,14 +221,14 @@ int main() {
                 break;
             case 1:
                 // White Tree Puzzle
-                if (!area1Solved) {    // If the puzzle has not been solved
+                if (!whiteTreeAreaSolved) {    // If the puzzle has not been solved
                     int result = whiteTreePuzzle(currentTurn);
                     if (result == 0) {
                         gameOver = true;
                     } else if (result == 1){
                         currentArea = 0;
                         previousArea = 1;
-                        area1Solved = true;
+                        whiteTreeAreaSolved = true;
                         brilliantCrystalFound = true;
                         if (ancientTomeFound && swordOfLightFound) {
                             allArtifactsFound = true;
@@ -199,7 +243,7 @@ int main() {
                 } else {  // If the puzzle has been solved
                     clearScreen(currentTurn);
                     printSlow("You are back in the clearing with the white trees and the pedestal, which is now empty.\n");
-                    int whiteTreeReturnChoice = makeChoice(whiteTreeChoicesReturn, currentTurn);
+                    whiteTreeReturnChoice = makeChoice(whiteTreeChoicesReturn, currentTurn);
                     switch (whiteTreeReturnChoice) {
                         case 1:
                             clearScreen(currentTurn);
@@ -212,14 +256,14 @@ int main() {
                     break;
                 }
             case 2:
-                if (!area2Solved) {    // If the puzzle has not been solved
+                if (!streamAreaSolved) {    // If the puzzle has not been solved
                     int result = streamPuzzle(currentTurn);
                     if (result == 0) {
                         gameOver = true;
                     } else if (result == 1){
                         currentArea = 3;
                         previousArea = 2;
-                        area2Solved = true;
+                        streamAreaSolved = true;
                     } else if (result == 2) {
                         currentArea = 0;
                         previousArea = 1;
@@ -229,14 +273,8 @@ int main() {
                 } else {  // If the puzzle has been solved
                     clearScreen(currentTurn);
                     printSlow("You are back in the area with the stream and stepping stones.\n");
-                    std::cout << "-------------------------------------------\n"
-                    "1. cross the stream and continue.\n"
-                    "2. Go back the way you came.\n"
-                    "-------------------------------------------\n"
-                    "What do you do: ";
-                    int choice;
-                    std::cin >> choice;
-                    switch (choice) {
+                    streamReturnChoice = makeChoice(streamChoicesReturn, currentTurn);
+                    switch (streamReturnChoice) {
                         case 1:
                             clearScreen(currentTurn);
                             printSlow("You decide to cross and continue on your journey.\n");
