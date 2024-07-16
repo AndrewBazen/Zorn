@@ -1,30 +1,38 @@
 #include "whitetreepuzzle.h"
 
 int whiteTreePuzzle(int currentTurn) {
+    std::vector<std::string> treeAreaChoices = {
+        "Drink the liquid",
+        "Examine the trees",
+        "Examine the pedestal",
+        "Leave the clearing"
+    };
+
+    
+    std::vector<std::string> treePuzzleChoices = {
+        "Touch the cresent moon tree",
+        "Touch the sun tree",
+        "Touch the star tree",
+        "Leave the trees"
+    };
+    
     std::vector<int> treeChoices;
     bool leaveTrees = false;
     bool gameOver = false;
     bool puzzleSolved = false;
     int result = 0;
+    int treeAreaChoice = 0;
+    int treeChoice = 0;
     int puzzleChances = 3;
     clearScreen(currentTurn);
     printSlow("You find yourself in a small clearing with three pure-white leafless trees in the center.\n"
     "The trees are arranged in a triangle, with a small pedestal in the center.\n"
     "On the pedestal, there is a silver bowl filled to the brim with a dark red liquid.\n");
     
-
+    // If the puzzle isn't solved and the player hasn't failed, then loop.
     while (!puzzleSolved && !gameOver) {
-        std::cout << "-------------------------------------------\n"
-        "1. Drink the liquid\n"
-        "2. Examine the trees\n"
-        "3. Examine the pedestal\n"
-        "4. Leave the clearing\n"
-        "-------------------------------------------\n"
-        "What do you do: ";
-
-        int choice;
-        std::cin >> choice;
-        switch (choice) {
+        treeAreaChoice = makeChoice(treeAreaChoices, currentTurn);
+        switch (treeAreaChoice) {
             case 1:
                 clearScreen(currentTurn);
                 printSlow("You take a sip of the liquid, and feel a warm sensation spread through your body.\n"
@@ -42,20 +50,15 @@ int whiteTreePuzzle(int currentTurn) {
                 "The first tree has a crescent moon, the second tree has a sun, and the third tree has a star.\n"
                 "You feel a sense of connection to the symbols, and know that they hold the key to the puzzle.\n");
                 leaveTrees = false;
+
+                // If the player still has chances and they haven't decided to leave, loop.
                 while (puzzleChances > 0 && !leaveTrees) {
-                    std::cout << treeChoices.size() << "\n";
-                    std::cout << "-------------------------------------------\n"
-                    "1. Touch the first tree\n"
-                    "2. Touch the second tree\n"
-                    "3. Touch the third tree\n"
-                    "4. Leave the trees\n"
-                    "-------------------------------------------\n"
-                    "What do you do: ";
-                    int treeChoice;
-                    std::cin >> treeChoice;
+                    treeChoice = makeChoice(treeAreaChoices, currentTurn);
                     switch (treeChoice) {
                         case 1:
                             treeChoices.push_back(1);
+                            // Checks to see if the choice vector is filled with the correct sequence
+                            // and solves the puzzle if it is.
                             if (treeChoices.size() == 3 && treeChoices[0] == 2 && treeChoices[1] == 3 && treeChoices[2] == 1){
                                 printSlow("You touch the first tree, and feel a surge of energy flow through you.\n"
                                 "The tree begins to glow with a soft white light, and you feel a sense of peace and calm wash over you.\n"
@@ -96,6 +99,7 @@ int whiteTreePuzzle(int currentTurn) {
                                 break;
                             }
                         case 4:
+                            // Allows the player to go back.
                             clearScreen(currentTurn);
                             printSlow("you leave the trees, and you are back in front of the pedestal.\n");
                             leaveTrees = true;
@@ -104,8 +108,11 @@ int whiteTreePuzzle(int currentTurn) {
                             std::cout << "Invalid choice. Please try again.\n";
                             break;
                     }
-                }
+                } 
+                // Checks to see if the player has run out of chances to solve the puzzle and
+                // returns game over if so.
                 if (puzzleChances == 0 && !leaveTrees) {
+                    gameOver = true;
                     clearScreen(currentTurn);
                     printSlow("The trees go dark and the ground beneath you begins to shake violently and crack beneath you.\n");
                     printRedAndSlow("You are unable to get away as you fall to darkness.\n"
@@ -113,7 +120,6 @@ int whiteTreePuzzle(int currentTurn) {
                     std::this_thread::sleep_for(std::chrono::seconds(2));
                     std::cout << "Press any key to continue...";
                     system("read");
-                    puzzleSolved = true;
                 }
                 break;
             case 3:

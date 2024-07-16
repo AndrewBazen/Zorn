@@ -14,6 +14,7 @@ int main() {
     int paperBagChoice = 0;
     int whiteTreeReturnChoice = 0;
     int streamReturnChoice = 0;
+    int campfireReturnChoice = 0;
     bool pathChosen = false;
     bool moveOn = false;
     bool paperAndBagTaken = false;
@@ -25,6 +26,7 @@ int main() {
     bool campfireRiddleSolved = false;
     bool ancientTomeFound = false;
     bool swordOfLightFound = false;
+    std::vector<int> campfireChoiceOrder;
     std::vector<std::string> bag = {"Dagger"};
     int usesLeft = 3;
 
@@ -52,29 +54,21 @@ int main() {
         "Go back the way you came"
     };
 
-    std::vector<std::string> whiteTreeChoices = {
-        "Approach the tree",
-        "Leave the clearing and go back"
-    };
-
     std::vector<std::string> whiteTreeChoicesReturn = {
         "leave the clearing and go back"
-    };
-
-    std::vector<std::string> whiteTreeChoicesApproach = {
-        "Touch the tree",
-        "Leave the clearing and go back"
-    };
-
-    std::vector<std::string> streamChoices = {
-
     };
 
     std::vector<std::string> streamChoicesReturn = {
         "Leave the stream and go back"
     };
 
-    
+    std::vector<std::string> campfireChoicesReturn = {
+        "Leave the campfire and continue",
+        "Take the path of the warrior",
+        "Take the path of the scholar",
+        "Leave the campfire and go back"
+    };
+
     std::cout << "\n"
         "▒███████▒ ▒█████   ██▀███   ███▄    █\n"
         "▒ ▒ ▒ ▄▀░▒██▒  ██▒▓██ ▒ ██▒ ██ ▀█   █\n" 
@@ -304,15 +298,9 @@ int main() {
                     printSlow("You are back at the campfire, but the figure is no longer there.\n"
                     "The fire crackles and pops, and you feel a sense of peace and warmth.\n");
                     if (previousArea == 2){
-                        std::cout << "-------------------------------------------\n"
-                        "1. Leave the campfire and go back the way you came.\n"
-                        "2. Take the path of the warrior.\n"
-                        "3. Take the path of the scholar.\n"
-                        "-------------------------------------------\n"
-                        "What do you do: ";
-                        int choice;
-                        std::cin >> choice;
-                        switch (choice) {
+                        campfireChoiceOrder = {3, 1, 2};
+                        campfireReturnChoice = makeAdjustedChoice(campfireChoicesReturn, campfireChoiceOrder); 
+                        switch (campfireReturnChoice) {
                             case 1:
                                 clearScreen(currentTurn);
                                 printSlow("You decide to leave the campfire and go back the way you came.\n");
@@ -336,15 +324,9 @@ int main() {
                                 break;
                         }
                     } else if (previousArea == 5) {
-                        std::cout << "-------------------------------------------\n"
-                        "1. Leave the campfire and continue.\n"
-                        "2. Take the path of the warrior.\n"
-                        "3. Leave the campfire and go back the way you came.\n"
-                        "-------------------------------------------\n"
-                        "What do you do: ";
-                        int choice;
-                        std::cin >> choice;
-                        switch (choice) {
+                        campfireChoiceOrder = {0, 1, 3};
+                        campfireReturnChoice = makeAdjustedChoice(campfireChoicesReturn, campfireChoiceOrder); 
+                        switch (campfireReturnChoice) {
                             case 1:
                                 clearScreen(currentTurn);
                                 printSlow("You decide to leave the campfire and continue on your journey.\n");
@@ -368,15 +350,9 @@ int main() {
                                 break;
                         }
                     } else if (previousArea == 4) {
-                        std::cout << "-------------------------------------------\n"
-                        "1. Leave the campfire and continue.\n"
-                        "2. Take the path of the scholar.\n"
-                        "3. Leave the campfire and go back the way you came.\n"
-                        "-------------------------------------------\n"
-                        "What do you do: ";
-                        int choice;
-                        std::cin >> choice;
-                        switch (choice) {
+                        campfireChoiceOrder = {0, 2, 3};
+                        campfireReturnChoice = makeAdjustedChoice(campfireChoicesReturn, campfireChoiceOrder); 
+                        switch (campfireReturnChoice) {
                             case 1:
                                 clearScreen(currentTurn);
                                 printSlow("You decide to leave the campfire and continue on your journey.\n");

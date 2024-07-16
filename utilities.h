@@ -11,3 +11,5 @@ void printSlow(std::string);
 void printRedAndSlow(std::string);
 
 int makeChoice(std::vector<std::string>, int);
+
+int makeAdjustedChoice(std::vector<std::string>, std::vector<int>);

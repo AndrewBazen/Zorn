@@ -1,11 +1,29 @@
 #include "streampuzzle.h"
 
 int streamPuzzle(int currentTurn) {
+    std::vector<std::string> streamAreaChoices = {
+        "Jump to one of the stones",
+        "Read the sign",
+        "Go back the way you came"
+    };
+    
+    std::vector<std::string> firstJumpChoices = {
+        "Jump to the left stone",
+        "Jump to the right stone",
+        "Don't jump"
+    };
+    std::vector<std::string> jumpChoices = {
+        "Jump to the left stone",
+        "Jump to the right stone"
+    };
     std::vector<int> streamChoices;
-    std::vector<int> correctPattern = {2,1,1,2,1};  // the solution to the puzzle
+    std::vector<int> correctPattern = {2,1,1,2,1};  // The solution to the puzzle
     bool leaveStream = false;
     int result = 0;
     int puzzleChances = 3;
+    int streamAreaChoice = 0;
+    int firstJumpChoice = 0;
+    int jumpChoice = 0;
     bool puzzleSolved = false;
     bool puzzleStarted = false;
     bool firstJumpBad = true;
@@ -17,35 +35,19 @@ int streamPuzzle(int currentTurn) {
 
     // Loop until the user decides to start the puzzle of leave the area.
     while (puzzleSolved == false && puzzleStarted == false && leaveStream == false) {
-        std::cout << "-------------------------------------------\n"
-            "1. Jump to one of the stones\n"
-            "2. Read the Sign\n"
-            "3. Go Back the Way you Came\n"
-            "-------------------------------------------\n"
-            "What do you do: ";
-
-        int choice;
-        std::cin >> choice;  // get the users choice
-
-        switch (choice) {
-            // player decides to jump
+        streamAreaChoice = makeChoice(streamAreaChoices, currentTurn);
+        switch (streamAreaChoice) {
+            // Player decides to jump
             case 1:
                 printSlow("As you look at the stones just under the surface of the water in front of you, you notice\n"
                 "that the stones are set in pairs all the way across the stream.\n");
             
-                // loop until the first jump is the correct one.
+                // Loop until the first jump is the correct one.
                 while (puzzleChances > 0 && puzzleStarted == false){
-                    std::cout << "-------------------------------------------\n"
-                    "1. Jump to the left stone\n"
-                    "2. Jump to the Right stone\n"
-                    "3. Don't jump\n"
-                    "-------------------------------------------\n"
-                    "What do you do: ";
-                    int firstJumpChoice;
-                    std::cin >> firstJumpChoice;
-                    if (firstJumpChoice == 3) {  // if the user decides not to jump exit loop
+                    firstJumpChoice = makeChoice(firstJumpChoices, currentTurn);
+                    if (firstJumpChoice == 3) {  // If the user decides not to jump exit loop
                         continue;
-                    } else if (firstJumpChoice == 1 || firstJumpChoice == 2) {  // if they decide to jump, start the puzzle
+                    } else if (firstJumpChoice == 1 || firstJumpChoice == 2) {  // If they decide to jump, start the puzzle
                         puzzleStarted = true;
                         switch (firstJumpChoice) {
                             case 1:
@@ -55,7 +57,7 @@ int streamPuzzle(int currentTurn) {
                                 printSlow("You jump to the first right stepping stone.\n");
                                 break;
                         }
-                        if (firstJumpChoice != correctPattern[0]) {  // decrease chances if the first jump is bad
+                        if (firstJumpChoice != correctPattern[0]) {  // Decrease chances if the first jump is bad
                             printSlow("The stone gives way under your weight and you find yourself thrust into the depths of the stream\n"
                             "The darkness surrounds you and the icy cold water saps your energy and everything goes dark\n");
                             puzzleChances--;
@@ -72,14 +74,7 @@ int streamPuzzle(int currentTurn) {
                                 if (puzzleStarted == false) {
                                     break;
                                 }
-                                std::cout << "-------------------------------------------\n"
-                                "1. Jump to the left stone\n"
-                                "2. Jump to the Right stone\n"
-                                "-------------------------------------------\n"
-                                "What do you do: ";
-
-                                int jumpChoice;
-                                std::cin >> jumpChoice;
+                                jumpChoice = makeChoice(jumpChoices, currentTurn);
                                 switch (jumpChoice) {
                                     case 1:
                                         printSlow("You jump to the left stepping stone.");

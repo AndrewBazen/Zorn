@@ -11,8 +11,14 @@ int campfireRiddle(int currentTurn) {
     int campfireChoice = 0;
     int questionChoice = 0;
     int riddleChoice = 0;
+    int fireChoice = 0;
 
-    std::vector<std::string> campfireChoices = {
+    std::vector<std::string> fireChoices = {
+        "Look deeper into the fire",
+        "Get up from the fire"
+    };
+
+    std::vector<std::string> campfireAreaChoices = {
         "Approach the figure",
         "Sit by the campfire",
         "Leave the campfire and go back"
@@ -39,7 +45,7 @@ int campfireRiddle(int currentTurn) {
         "a sign reads 'The Path of the Scholar'.\n");
 
     while (!pathChosen && !gameOver && !leaveFire) {
-        campfireChoice = makeChoice(campfireChoices, currentTurn);
+        campfireChoice = makeChoice(campfireAreaChoices, currentTurn);
         switch (campfireChoice) {
             case 1:
                 clearScreen(currentTurn);
@@ -109,13 +115,7 @@ int campfireRiddle(int currentTurn) {
                 "The fire crackles and pops, and in the coals, you think you see shapes moving.\n");
                 goBack = false;
                 while (!goBack) {
-                    std::cout << "-------------------------------------------\n";
-                    std::cout << "1. look deeper into the fire\n"
-                    "2. get up from the campfire\n"
-                    "-------------------------------------------\n"
-                    "What do you do: ";
-                    int fireChoice;
-                    std::cin >> fireChoice;
+                    fireChoice = makeChoice(fireChoices, currentTurn);
                     switch (fireChoice) {
                         case 1:
                             clearScreen(currentTurn);
