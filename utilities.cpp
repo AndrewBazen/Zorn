@@ -10,18 +10,31 @@ void clearScreen(int currentTurn) {
 }
 
 void printSlow(std::string text) {
+    bool skipKeyPressed = false;
     for (int i = 0; i < text.length(); i++) {
+        std::cout << std::cin.peek();
+        if (std::cin.peek() != '\n') {
+            skipKeyPressed = true;
+        }
         std::cout << text[i];
         std::cout.flush();
-        std::this_thread::sleep_for(std::chrono::milliseconds(25));
+        if (!skipKeyPressed) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(25));
+        }
     }
 }
 
 void printRedAndSlow(std::string text) {
+    bool skipKeyPressed = false;
     for (int i = 0; i < text.length(); i++) {
+        if (std::cin.peek() != EOF) {
+            skipKeyPressed = true;
+        }
         std::cout << "\033[1;31m" << text[i] << "\033[0m";
         std::cout.flush();
-        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        if (!skipKeyPressed) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        }
     }
 }
 
@@ -35,9 +48,10 @@ int makeChoice(std::vector<std::string> choices, int currentTurn) {
     }
     std::cout << "---------------------------------------------------\n";
     while (!valid) {
+        choice = 0;
         std::cout << "Enter your choice: ";
-        try {
-            std::cin >> choice;
+        // try {
+            choice = std::cin.get();
             if (choice > 0 && choice <= choices.size()) {
                 valid = true;
             } else {
@@ -47,13 +61,13 @@ int makeChoice(std::vector<std::string> choices, int currentTurn) {
                 printf("\e[2K");
                 printf("\e[1A\e[2K\r");
             }
-        } catch (...) {
-            std::cout << "\033[1;31m" << "  Invalid choice. Please try again." << "\033[0m";
-            std::cout.flush();
-            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-            printf("\e[2K");
-            printf("\e[1A\e[2K\r");
-        }
+        // } catch (...) {
+        //     std::cout << "\033[1;31m" << "  Invalid choice. Please try again." << "\033[0m";
+        //     std::cout.flush();
+        //     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        //     printf("\e[2K");
+        //     printf("\e[1A\e[2K\r");
+        // }
     }
     return choice;
 }

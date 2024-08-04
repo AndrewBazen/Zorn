@@ -40,8 +40,8 @@ int whiteTreePuzzle(int currentTurn) {
                 "You feel a sudden sense of dread, and know that you have made a grave mistake. Pain grips your entire body as you begin to cough and choke on the blood.\n"
                 "you fall to the ground, your vision blurring as the darkness consumes you.\n");
                 printRedAndSlow("Game Over\n");
-                std::cout << "press any key to continue...";
-                system("read");
+                printSlow("press any key to continue...");
+                system("pause");
                 puzzleSolved = true;
                 break;
             case 2:
