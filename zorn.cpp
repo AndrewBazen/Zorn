@@ -3,7 +3,6 @@
 #include "streampuzzle.h"
 #include "utilities.h"
 
-
 int main() {
     int choiceInvalid = true;
     int currentArea = 0;
@@ -98,10 +97,13 @@ int main() {
     }
     
     clearScreen(currentTurn);
-    printSlow("You wake to the sound of leaves rustling in the wind, and find yourself in a dark forest with tall tress that cover the sky above you..\n"
-        "You have no memory of how you got here, or where you are.\n"
-        "You see a path leading to the left, which seems to be giving off a soft white glow, and a path leading to the right, which looks dark frightening.\n"
-        "Directly in front of you, there is a small statue of a wolf, in it's mouth are a piece of paper, and a small bag.\n");
+    printSlow("You wake to the sound of leaves rustling in the wind, and find\n" 
+        "yourself in a dark forest with tall tress that cover the sky above you..\n"
+        "You have no memory of how you got here, or where you are. You see a path\n" 
+        "leading to the left, which seems to be giving off a soft white glow,\n" 
+        "and a path leading to the right, which looks dark frightening. Directly\n"
+        "in front of you, there is a small statue of a wolf, in it's mouth are\n"
+        "a piece of paper, and a small bag.\n");
 
     while(pathChosen == false) {
         if (!paperAndBagTaken) {
@@ -113,9 +115,9 @@ int main() {
             case 1:
                 paperAndBagTaken = true;
                 clearScreen(currentTurn);
-                printSlow("You carefully move to the wolf statue.\n"  
-                "For a moment you think you see its eyes shine red, but maybe it was your imagination.\n"
-                "You manage to take the paper and bag.\n");
+                printSlow("You carefully move to the wolf statue. For a moment you think\n"
+                    "you see its eyes shine red, but maybe it was your imagination. You manage\n"
+                    "to take the paper and bag.\n");
                 
                 while (moveOn == false) {
                     paperBagChoice = makeChoice(paperBagChoices, currentTurn);
@@ -123,20 +125,23 @@ int main() {
                         case 1:
                             clearScreen(currentTurn);
                             printSlow("You open the paper and read the following:\n"
-                            "Welcome to Zorn, a world of darkness and tragedy.\n"
-                            "You have been chosen to save this world from the darkness that threatens to consume it.\n"
-                            "You must find the 3 artifacts of power, and use them to defeat the evil that lurks in the shadows.\n"
-                            "Good luck, brave adventurer.\n");
+                                "Welcome to Zorn, a world of darkness and tragedy.\n"
+                                "You have been chosen to save this world from the\n"
+                                "darkness that threatens to consume it. You must\n"
+                                "find the 3 artifacts of power, and use them to defeat\n"
+                                "the evil that lurks in the shadows. Good luck, brave\n"
+                                "adventurer.\n");
                             break;
                         case 2:
                             clearScreen(currentTurn);
                             printSlow("You open the bag and find a small dagger inside.\n"
-                            "It looks sharp and well made.\n"
-                            "You decide to keep it, as it may come in handy.\n");
+                                "It looks sharp and well made. You decide to keep it,\n"
+                                "as it may come in handy.\n");
                             break;
                         case 3:
                             clearScreen(currentTurn);
-                            printSlow("You decide to leave the statue behind and continue on your journey.\n");
+                            printSlow("You decide to leave the statue behind and continue\n"
+                                "on your journey.\n");
                             moveOn = true;
                             break;
                     }
@@ -159,40 +164,48 @@ int main() {
     while (gameOver == false) {
         if (allArtifactsFound) {
             clearScreen(currentTurn);
-            printSlow("You have found all 3 artifacts of power, and are ready to face the darkness that threatens to consume Zorn.\n"
-            "You make your way to the heart of the forest, where the evil that lurks in the shadows awaits.\n"
-            "You feel a sense of dread and fear as you approach, but you know that you must be strong and face your fears.\n"
-            "You take a deep breath, and step forward into the darkness.\n"
-            "Press any key to continue...\n");
+            printSlow("You have found all 3 artifacts of power, and are ready to\n"
+                "face the darkness that threatens to consume Zorn. You make your\n"
+                "way to the heart of the forest, where the evil that lurks in the\n" 
+                "shadows awaits. You feel a sense of dread and fear as you approach,\n"
+                "but you know that you must be strong and face your fears. You take\n"
+                "a deep breath, and step forward into the darkness.\n"
+                "Press any key to continue...\n");
             system("read");
             break;
         } else if (currentTurn == 10) {
             clearScreen(currentTurn);
-            printSlow("You have been wandering for hours, but you can't seem to find your way out of the forest.\n"
-            "You feel a strong presence growing closer, and the hairs on the back of your neck begin to stand up.\n"
-            "Press any key to continue...\n");
+            printSlow("You have been wandering for hours, but you can't seem to find\n" 
+                "your way out of the forest. You feel a strong presence growing closer,\n"
+                "and the hairs on the back of your neck begin to stand up.\n"
+                "Press any key to continue...\n");
             system("read");
         } else if (currentTurn == 20) {
             clearScreen(currentTurn);
-            printSlow("You have been wandering for hours, but you can't seem to find your way out of the forest.\n"
-            "You feel a strong presence growing much closer, you hear a long deep howl in the distance and feel as though you are being watched.\n"
-            "Press any key to continue...\n");
+            printSlow("You have been wandering for hours, but you can't seem to find\n" 
+            "your way out of the forest. You feel a strong presence growing much closer,\n"
+            "you hear a long deep howl in the distance and feel as though you are being watched.\n"
+                "Press any key to continue...\n");
             system("read");
         } else if (currentTurn >= 30 && currentTurn % 3 == 0) {
             clearScreen(currentTurn);
             printSlow("The wind picks up around you and the trees begin to moan and creak.\n"
-            "You feel an overwhelming presence as a titanic wolf with giant fangs, blood red eyes, and pitch black fur makes its way out to the dark trees.\n"
-            "You feel a sense of dread and fear as it approaches you, its bloodlust hanging in the air like fog.\n\n");
+                "You feel an overwhelming presence as a titanic wolf with giant fangs,\n"
+                "blood red eyes, and pitch black fur makes its way out to the dark trees.\n"
+                "You feel a sense of dread and fear as it approaches you, its bloodlust\n"
+                "hanging in the air like fog.\n\n");
             printRedAndSlow("You feel the darkness start to press in on you");
             if (brilliantCrystalFound && usesLeft > 0) {
                 printSlow(" but you feel the power of the artifact start to vibrate.\n"
-                "You hold it up and the wolf recoils in fear, its eyes wide with terror.\n"
-                "You feel a surge of power as the darkness is pushed back, and the wolf howls in pain before disappearing into the shadows.\n"
-                "Press any key to continue...\n");
+                    "You hold it up and the wolf recoils in fear, its eyes wide with terror.\n"
+                    "You feel a surge of power as the darkness is pushed back, and the\n"
+                    "wolf howls in pain before disappearing into the shadows.\n"
+                    "Press any key to continue...\n");
                 system("read");
                 usesLeft--;
             } else {
-                printSlow(" and you feel the darkness start to consume you. As the wolf begins to devour your flesh.\n");
+                printSlow(" and you feel the darkness start to consume you. As the wolf\n"
+                    "begins to devour your flesh.\n");
                 printRedAndSlow("Game Over\n");
                 std::cout << "Press any key to continue...\n";
                 system("read");
@@ -236,7 +249,8 @@ int main() {
                     break;
                 } else {  // If the puzzle has been solved
                     clearScreen(currentTurn);
-                    printSlow("You are back in the clearing with the white trees and the pedestal, which is now empty.\n");
+                    printSlow("You are back in the clearing with the white trees and the\n" 
+                        "pedestal, which is now empty.\n");
                     whiteTreeReturnChoice = makeChoice(whiteTreeChoicesReturn, currentTurn);
                     switch (whiteTreeReturnChoice) {
                         case 1:
@@ -296,14 +310,15 @@ int main() {
                 if (campfireRiddleSolved) {
                     clearScreen(currentTurn);
                     printSlow("You are back at the campfire, but the figure is no longer there.\n"
-                    "The fire crackles and pops, and you feel a sense of peace and warmth.\n");
+                        "The fire crackles and pops, and you feel a sense of peace and warmth.\n");
                     if (previousArea == 2){
                         campfireChoiceOrder = {3, 1, 2};
                         campfireReturnChoice = makeAdjustedChoice(campfireChoicesReturn, campfireChoiceOrder); 
                         switch (campfireReturnChoice) {
                             case 1:
                                 clearScreen(currentTurn);
-                                printSlow("You decide to leave the campfire and go back the way you came.\n");
+                                printSlow("You decide to leave the campfire and go back\n"
+                                "the way you came.\n");
                                 currentArea = previousArea;
                                 previousArea = 3;
                                 break;
