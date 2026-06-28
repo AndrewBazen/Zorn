@@ -2,72 +2,17 @@
 #include "campfireriddle.h"
 #include "streampuzzle.h"
 #include "utilities.h"
+#include "gamestate.h"
 
 int main() {
-    int choiceInvalid = true;
-
-    int currentArea = 0;
-    int previousArea = 0;
-    int currentTurn = 0;
-    int startPathChoice = 0;
-    int startPathReturnChoice = 0;
-    int paperBagChoice = 0;
-    int whiteTreeReturnChoice = 0;
-    int streamReturnChoice = 0;
-    int campfireReturnChoice = 0;
-    bool pathChosen = false;
-    bool moveOn = false;
-    bool paperAndBagTaken = false;
+    Gamestate gamestate = new Gamestate();
     bool gameOver = false;
-    bool allArtifactsFound = false;
-    bool brilliantCrystalFound = false;
-    bool whiteTreeAreaSolved = false;
-    bool streamAreaSolved= false;
-    bool campfireRiddleSolved = false;
-    bool ancientTomeFound = false;
-    bool swordOfLightFound = false;
+
     std::vector<int> campfireChoiceOrder;
     std::vector<std::string> bag = {"Dagger"};
     int usesLeft = 3;
 
-    std::vector<std::string> mainMenuChoices = {
-        "New Game", 
-        "Quit"
-    };
-    std::vector<std::string> startAreaChoices = {
-        "Take the paper and bag",
-        "Take the path to the left",
-        "Take the path to the right"
-    };
-    std::vector<std::string> paperBagChoices = {
-        "Read the paper",
-        "Open the bag",
-        "Continue"
-    };
-    std::vector<std::string> startAreaChoicesTaken = {
-        "Continue",
-        "Take the path to the left",
-        "Take the path to the right"
-    };
-    std::vector<std::string> startAreaChoicesReturn = {
-        "Continue",
-        "Go back the way you came"
-    };
 
-    std::vector<std::string> whiteTreeChoicesReturn = {
-        "leave the clearing and go back"
-    };
-
-    std::vector<std::string> streamChoicesReturn = {
-        "Leave the stream and go back"
-    };
-
-    std::vector<std::string> campfireChoicesReturn = {
-        "Leave the campfire and continue",
-        "Take the path of the warrior",
-        "Take the path of the scholar",
-        "Leave the campfire and go back"
-    };
 
     std::cout << "\n"
         "▒███████▒ ▒█████   ██▀███   ███▄    █\n"
@@ -106,62 +51,53 @@ int main() {
         "in front of you, there is a small statue of a wolf, in it's mouth are\n"
         "a piece of paper, and a small bag.\n");
 
-    while(pathChosen == false) {
-        if (!paperAndBagTaken) {
-            startPathChoice = makeChoice(startAreaChoices, currentTurn);
-        } else {
-            startPathChoice = makeChoice(startAreaChoicesTaken, currentTurn);
-        }
-        switch (startPathChoice) {
-            case 1:
-                paperAndBagTaken = true;
-                clearScreen(currentTurn);
-                printSlow("You carefully move to the wolf statue. For a moment you think\n"
-                    "you see its eyes shine red, but maybe it was your imagination. You manage\n"
-                    "to take the paper and bag.\n");
-                
-                while (moveOn == false) {
-                    paperBagChoice = makeChoice(paperBagChoices, currentTurn);
-                    switch (paperBagChoice) {
-                        case 1:
-                            clearScreen(currentTurn);
-                            printSlow("You open the paper and read the following:\n"
-                                "Welcome to Zorn, a world of darkness and tragedy.\n"
-                                "You have been chosen to save this world from the\n"
-                                "darkness that threatens to consume it. You must\n"
-                                "find the 3 artifacts of power, and use them to defeat\n"
-                                "the evil that lurks in the shadows. Good luck, brave\n"
-                                "adventurer.\n");
-                            break;
-                        case 2:
-                            clearScreen(currentTurn);
-                            printSlow("You open the bag and find a small dagger inside.\n"
-                                "It looks sharp and well made. You decide to keep it,\n"
-                                "as it may come in handy.\n");
-                            break;
-                        case 3:
-                            clearScreen(currentTurn);
-                            printSlow("You decide to leave the statue behind and continue\n"
-                                "on your journey.\n");
-                            moveOn = true;
-                            break;
-                    }
-                }
-                break;
-            case 2:
-                currentArea = 1;
-                clearScreen(currentTurn);
-                std::cout << "You cautiously make your way down the path to the left.\n";
-                pathChosen = true;
-                break;
-            case 3:
-                currentArea = 2;
-                clearScreen(currentTurn);
-                std::cout << "You have chosen to take the path to the right\n";
-                pathChosen = true;
-                break;
-        }
-    }
+    clearScreen(currentTurn);
+    printSlow("You carefully move to the wolf statue. For a moment you think\n"
+        "you see its eyes shine red, but maybe it was your imagination. You manage\n"
+        "to take the paper and bag.\n"
+        "Press any key to continue...\n");
+    system("read");
+
+    clearScreen(currentTurn);
+    printSlow("You open the paper and read the following:\n"
+        "Welcome to Zorn, a world of darkness and tragedy.\n"
+        "You have been chosen to save this world from the\n"
+        "darkness that threatens to consume it. You must\n"
+        "find the 3 artifacts of power, and use them to defeat\n"
+        "the evil that lurks in the shadows. Good luck, brave\n"
+        "adventurer.\n"
+        "Press any key to continue...\n");
+    system("read");
+
+    clearScreen(currentTurn);
+    printSlow("You open the bag and find a small dagger inside.\n"
+        "It looks sharp and well made. You decide to keep it,\n"
+        "as it may come in handy.\n"
+        "Press any key to continue...\n");
+    system("read");
+
+    clearScreen(currentTurn);
+    printSlow("You decide to leave the statue behind and continue\n"
+        "on your journey.\n"
+        "Press any key to continue...\n");
+    system("read");
+
+    clearScreen(currentTurn);
+    printSlow(".You see a pathleading to the left, which seems to be giving\n"
+        "off a soft white glow, and a path leading to the right, which looks\n"
+        "dark and frightening.\n");
+    gamestate.currentArea = makeChoice(startAreaChoices, currentTurn);
+
+    currentArea = 1;
+
+    clearScreen(currentTurn);
+    std::cout << "You cautiously make your way down the path to the left.\n";
+
+    currentArea = 2;
+
+    clearScreen(currentTurn);
+    std::cout << "You have chosen to take the path to the right\n";
+
     while (gameOver == false) {
         if (allArtifactsFound) {
             clearScreen(currentTurn);
