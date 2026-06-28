@@ -3,6 +3,8 @@
 #include <thread>
 #include <cstdlib>
 #include <array>
+#include <vector>
+#include <string>
 
 void clearScreen(int);
 

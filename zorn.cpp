@@ -5,6 +5,7 @@
 
 int main() {
     int choiceInvalid = true;
+
     int currentArea = 0;
     int previousArea = 0;
     int currentTurn = 0;

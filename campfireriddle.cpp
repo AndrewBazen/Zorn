@@ -78,7 +78,7 @@ int campfireRiddle(int currentTurn) {
                             printSlow("You ask the figure what happened to them, and it's eyes\n"
                                 "seem to flash from under the hood.\n");
                             printRedAndSlow("Cruel is the fate that awaits the cowardly. Forever\n"
-                                "wandering in the dark and never seeking to fight. The lord\n"
+                                "wandering in the dark and never seeking to fight. The dark lord\n"
                                 "holds out his hand, and the coward takes it, never to return\n"
                                 "to the light.\n");
                             break;
@@ -87,8 +87,8 @@ int campfireRiddle(int currentTurn) {
                             printSlow("You ask the figure which path to take, and the figure speaks\n"
                                 "in a low, raspy voice,\n");
                             printRedAndSlow("A question for a question, which is mightier, the sword\n"
-                                "or the pen? For with a sword you may write your own destiny, and with\n"
-                                "a pen you may strike down your foes. Choose wisely, traveler, for\n"
+                                "or the pen? For with a pen you may write your own destiny, and with\n"
+                                "a sword you may strike down your foes. Choose wisely, traveler, for\n"
                                 "only the brave and the wise may pass.\n");
                             riddleChoice = makeChoice(figureAnswerChoices, currentTurn);
                             switch (riddleChoice) {
