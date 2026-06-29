@@ -17,5 +17,5 @@ class Gamestate {
         void moveTo(Area);
 
     private:
-        std::vector<Area> gameAreas;
+        std::map<std::string, Area> gameAreas;
 };
