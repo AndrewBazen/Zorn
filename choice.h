@@ -4,8 +4,13 @@
 #include <string>
 
 struct Navigate { std::string destination; };
-struct InitiatePuzzle { std::string puzzleId; };
+struct InitiatePuzzle { 
+    std::string puzzleId; 
+    std::string rewardItem;
+    std::string onSolve;
+};
 struct Choice {
     std::string label;
-    std::variant<Navigate, InitiatePuzzle> effect;
+    using Effect = std::variant<Navigate, InitiatePuzzle>;
+    Effect effect;
 };

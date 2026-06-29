@@ -77,16 +77,9 @@ int main() {
     system("read");
 
     clearScreen(currentTurn);
-    printSlow("You decide to leave the statue behind and continue\n"
-        "on your journey.\n"
-        "Press any key to continue...\n");
-    system("read");
-
-    clearScreen(currentTurn);
-    printSlow(".You see a pathleading to the left, which seems to be giving\n"
+    printSlow("Beyond the wolf statue you see a pathleading to the left, which seems to be giving\n"
         "off a soft white glow, and a path leading to the right, which looks\n"
         "dark and frightening.\n");
-    gamestate.currentArea = makeChoice(startAreaChoices, currentTurn);
 
     currentArea = 1;
 

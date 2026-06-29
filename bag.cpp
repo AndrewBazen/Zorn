@@ -5,9 +5,9 @@ void Bag::add(const Item& item) {
     contents.push_back(item);
 }
 
-bool Bag::has(const std::string& name) const {
+bool Bag::has(const std::string& id) const {
     for (const Item& item : contents) {
-        if (item.name == name) return true; 
+        if (item.id == id) return true;
     }
     return false;
 }
