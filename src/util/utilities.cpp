@@ -6,19 +6,24 @@
 */
 
 #include "utilities.h"
+#include <iostream>
+#include <chrono>
+#include <thread>
+#include <array>
+#include <atomic>
+
+
 
 /* clearScreen - clears the terminal screen
 *
 * @param currentTurn - the players current turn number
 */
-void clearScreen(int currentTurn) {
+void clearScreen() {
     try {
         if (system("cls")) system("clear");
     } catch (...) {
         std::cout << "Error clearing screen." << std::endl;
     }
-    std::cout << "                                                   Turn: " 
-    << currentTurn << std::endl;
 }
 
 /* printSlow - prints a string to the terminal slowly
@@ -26,6 +31,7 @@ void clearScreen(int currentTurn) {
 * @param text - the string to be printed 
 */
 void printSlow(std::string text) {
+    clearScreen();
     for (int i = 0; i < text.length(); i++) {
         std::cout << text[i];
         std::cout.flush();
@@ -46,13 +52,35 @@ void printRedAndSlow(std::string text) {
     }
 }
 
+void waitForInput(const std::string& prompt) {
+    std::atomic<bool> done{false};
+
+    std::thread animator([&]() {
+        const std::array<std::string, 4> frames = {"   ", ".  ", ".. ", "..."};
+        int i = 0;
+        while (!done) {
+            std::cout << '\r' << prompt << frames[i % frames.size()];
+            std::cout.flush();
+            for (int t = 0; t < 250 && !done; t += 25)
+                std::this_thread::sleep_for(std::chrono::milliseconds(25));
+            if (i == frames.size()) i = 0;
+            i++;
+        }
+    });
+    
+    std::cin.get();
+    done = true;
+    animator.join();
+    std::cout << "\n";
+}
+
 /* makeChoice - prompts the user to make a choice based on the input choices 
 *
 * @param choices - a vector of strings that will be printed to the player
 * @param currentTurn - the players turn number
 * @return choice - the number of the choice the player chose.
 */
-int makeChoice(std::vector<std::string> choices, int currentTurn) {
+int makeChoice(std::vector<std::string> choices) {
     int choice = 0;
     std::string input;
     bool valid = false;
@@ -64,26 +92,17 @@ int makeChoice(std::vector<std::string> choices, int currentTurn) {
     while (!valid) {
         choice = 0;
         std::cout << "Enter your choice: ";
-        // try {
-            std::cin >> choice;
-            if (choice > 0 && choice <= choices.size()) {
-                valid = true;
-            } else {
-                std::cout << "\033[31m" << "  Invalid choice. Please try again." 
-                << "\033[0m";
-                std::cout.flush();
-                std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-                printf("\e[2K");
-                printf("\e[1A\e[2K\r");
-            }
-        // } catch (...) {
-        //     std::cout << "\033[1;31m" << "  Invalid choice. Please try again." 
-        //     << "\033[0m";
-        //     std::cout.flush();
-        //     std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-        //     printf("\e[2K");
-        //     printf("\e[1A\e[2K\r");
-        // }
+        std::cin >> choice;
+        if (choice > 0 && choice <= choices.size()) {
+            valid = true;
+        } else {
+            std::cout << "\033[31m" << "  Invalid choice. Please try again." 
+            << "\033[0m";
+            std::cout.flush();
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+            printf("\e[2K");
+            printf("\e[1A\e[2K\r");
+        }
     }
     return choice;
 }

@@ -1,7 +1,7 @@
 #pragma once
 
 #include "item.h"
-#include <vector>
+#include <map>
 #include <string>
 
 class Bag {
@@ -10,8 +10,12 @@ class Bag {
 
         bool has(const std::string&) const;
 
+        int getUses(const std::string&) const;
+
+        void use(const std::string&);    
+
         void list_contents() const;
 
     private:
-        std::vector<Item> contents;
+        std::map<std::string, Item> contents;
 };

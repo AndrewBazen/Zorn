@@ -1,4 +1,7 @@
 #include "streampuzzle.h"
+#include <thread>
+#include <chrono>
+#include <iostream>
 
 int streamPuzzle(int currentTurn) {
     std::vector<std::string> streamAreaChoices = {
@@ -35,7 +38,7 @@ int streamPuzzle(int currentTurn) {
 
     // Loop until the user decides to start the puzzle of leave the area.
     while (puzzleSolved == false && puzzleStarted == false && leaveStream == false) {
-        streamAreaChoice = makeChoice(streamAreaChoices, currentTurn);
+        streamAreaChoice = makeChoice(streamAreaChoices);
         switch (streamAreaChoice) {
             // Player decides to jump
             case 1:
@@ -44,7 +47,7 @@ int streamPuzzle(int currentTurn) {
             
                 // Loop until the first jump is the correct one.
                 while (puzzleChances > 0 && puzzleStarted == false){
-                    firstJumpChoice = makeChoice(firstJumpChoices, currentTurn);
+                    firstJumpChoice = makeChoice(firstJumpChoices);
                     if (firstJumpChoice == 3) {  // If the user decides not to jump exit loop
                         continue;
                     } else if (firstJumpChoice == 1 || firstJumpChoice == 2) {  // If they decide to jump, start the puzzle
@@ -74,7 +77,7 @@ int streamPuzzle(int currentTurn) {
                                 if (puzzleStarted == false) {
                                     break;
                                 }
-                                jumpChoice = makeChoice(jumpChoices, currentTurn);
+                                jumpChoice = makeChoice(jumpChoices);
                                 switch (jumpChoice) {
                                     case 1:
                                         printSlow("You jump to the left stepping stone.");

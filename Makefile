@@ -1,6 +1,6 @@
 # Zorn build.  Run `make` for the game, `make ptest` for the parser test.
 CXX      := g++
-CXXFLAGS := -std=c++20 -Isrc -g
+CXXFLAGS := -std=c++20 -Isrc -g -pthread
 
 # All translation units, grouped by package. (-Isrc lets any file include
 # another with a path from src/, e.g. #include "world/gamestate.h".)

@@ -2,17 +2,24 @@
 #include <iostream>
 
 void Bag::add(const Item& item) {
-    contents.push_back(item);
+    contents.insert({item.id, item});
 }
 
 bool Bag::has(const std::string& id) const {
-    for (const Item& item : contents) {
-        if (item.id == id) return true;
-    }
-    return false;
+    return contents.contains(id) ? true : false;
+}
+
+int Bag::getUses(const std::string& id) const {
+    return contents.at(id).usesLeft;
+}
+
+void Bag::use(const std::string& id) {
+    --contents.at(id).usesLeft;
 }
 
 void Bag::list_contents() const {
     std::cout << "----Bag Contents----\n";  
-    for (const Item& item : contents) std::cout << "  " << item.name << "\n";
+    for (const auto& [id, item] : contents) {
+        std::cout << "  " << item.name << "\n";
+    }
 }

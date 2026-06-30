@@ -1,6 +1,6 @@
 #include "gamestate.h"
 #include "choice.h"
-#include "util/utilities.h"
+#include "puzzles/whitetreepuzzle.h"
 #include <iostream>
 
 template <class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
@@ -53,6 +53,10 @@ void Gamestate::loadAreas() {
     });
 }
 
+void Gamestate::loadPuzzles() {
+   
+}
+
 Area& Gamestate::here() {
     return areas.at(currentArea);
 }
@@ -87,6 +91,59 @@ void Gamestate::runPuzzle(const InitiatePuzzle& p) {
 
 void Gamestate::handleTimedEvents() {
     // TODO: wolf timer
+    if (allArtifactsFound()) {
+
+        clearScreen(currentTurn);
+        printSlow("You have found all artifacts of power, and are ready to\n"
+            "face the darkness that threatens to consume Zorn. You make your\n"
+            "way to the heart of the forest, where the evil that lurks in the\n" 
+            "shadows awaits. You feel a sense of dread and fear as you approach,\n"
+            "but you know that you must be strong and face your fears. You take\n"
+            "a deep breath, and step forward into the darkness.\n\n");
+        waitForInput();
+
+    } else if (currentTurn == 10) {
+
+        clearScreen(currentTurn);
+        printSlow("You have been wandering for hours, but you can't seem to find\n" 
+            "your way out of the forest. You feel a strong presence growing closer,\n"
+            "and the hairs on the back of your neck begin to stand up.\n\n");
+        waitForInput();
+
+    } else if (currentTurn == 20) {
+
+        clearScreen(currentTurn);
+        printSlow("You have been wandering for hours, but you can't seem to find\n" 
+        "your way out of the forest. You feel a strong presence growing much closer,\n"
+        "you hear a long deep howl in the distance and feel as though you are being watched.\n\n");
+        waitForInput();
+
+    } else if (currentTurn >= 30) {
+
+        clearScreen(currentTurn);
+        printSlow("The wind picks up around you and the trees begin to moan and creak.\n"
+            "You feel an overwhelming presence as a titanic wolf with giant fangs,\n"
+            "blood red eyes, and pitch black fur makes its way out to the dark trees.\n"
+            "You feel a sense of dread and fear as it approaches you, its bloodlust\n"
+            "hanging in the air like fog.\n\n");
+        printRedAndSlow("You feel the darkness start to press in on you\n\n");
+
+        if (bag.has("brilliant-crystal") && bag.getUses("brilliant-crystal") > 0) {
+            printSlow(" but you feel the power of the artifact start to vibrate.\n"
+                "You hold it up and the wolf recoils in fear, its eyes wide with terror.\n"
+                "You feel a surge of power as the darkness is pushed back, and the\n"
+                "wolf howls in pain before disappearing into the shadows.\n\n");
+            waitForInput();
+            bag.use("brilliant-crystal");
+
+        } else {
+            printSlow(" and you feel the darkness start to consume you. As the wolf\n"
+                "begins to devour you.\n\n");
+            printRedAndSlow("Game Over\n\n");
+            waitForInput();
+            gameOver = true;
+        }
+    }
 }
 
 std::vector<std::string> labelsOf(const std::vector<Choice>& c) {
@@ -116,7 +173,7 @@ void Gamestate::run() {
 
         handleTimedEvents();
 
-        int idx = makeChoice(labelsOf(area.choices), currentTurn);
+        int idx = makeChoice(labelsOf(area.choices));
         applyEffect(area.choices[idx - 1].effect);   // makeChoice is 1-based
 
         nextTurn();

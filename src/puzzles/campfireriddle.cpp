@@ -1,4 +1,5 @@
 #include "campfireriddle.h"
+#include <iostream>
 
 int campfireRiddle(int currentTurn) {
     std::vector<std::string> questions = {"Ask who the lord is", 
@@ -48,7 +49,7 @@ int campfireRiddle(int currentTurn) {
         "Scholar'.\n");
 
     while (!pathChosen && !gameOver && !leaveFire) {
-        campfireChoice = makeChoice(campfireAreaChoices, currentTurn);
+        campfireChoice = makeChoice(campfireAreaChoices);
         switch (campfireChoice) {
             case 1:
                 clearScreen(currentTurn);
@@ -64,7 +65,7 @@ int campfireRiddle(int currentTurn) {
                     "you may ask me three questions, but be warned, my answers\n"
                     "may not be what you seek.\n");
                 while (!leaveFigure) {
-                    questionChoice = makeChoice(figureChoices, currentTurn);
+                    questionChoice = makeChoice(figureChoices);
                     switch (questionChoice) {
                         case 1:
                             clearScreen(currentTurn);
@@ -90,7 +91,7 @@ int campfireRiddle(int currentTurn) {
                                 "or the pen? For with a pen you may write your own destiny, and with\n"
                                 "a sword you may strike down your foes. Choose wisely, traveler, for\n"
                                 "only the brave and the wise may pass.\n");
-                            riddleChoice = makeChoice(figureAnswerChoices, currentTurn);
+                            riddleChoice = makeChoice(figureAnswerChoices);
                             switch (riddleChoice) {
                                 case 1:
                                     clearScreen(currentTurn);
@@ -135,7 +136,7 @@ int campfireRiddle(int currentTurn) {
                     "in the coals, you think you see shapes moving.\n");
                 goBack = false;
                 while (!goBack) {
-                    fireChoice = makeChoice(fireChoices, currentTurn);
+                    fireChoice = makeChoice(fireChoices);
                     switch (fireChoice) {
                         case 1:
                             clearScreen(currentTurn);

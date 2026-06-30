@@ -6,6 +6,9 @@
 */
 
 #include "whitetreepuzzle.h"
+#include <iostream>
+#include <thread>
+#include <chrono>
 
 /* whiteTreePuzzle - runs a puzzle for the player to solve by touching 3 trees
 * in the correct order.
@@ -46,7 +49,7 @@ int whiteTreePuzzle(int currentTurn) {
     
     // If the puzzle isn't solved and the player hasn't failed, then loop.
     while (!puzzleSolved && !gameOver) {
-        treeAreaChoice = makeChoice(treeAreaChoices, currentTurn);
+        treeAreaChoice = makeChoice(treeAreaChoices);
         switch (treeAreaChoice) {
             case 1:
                 clearScreen(currentTurn);
@@ -73,7 +76,7 @@ int whiteTreePuzzle(int currentTurn) {
 
                 // If the player still has chances and they haven't decided to leave, loop.
                 while (puzzleChances > 0 && !leaveTrees) {
-                    treeChoice = makeChoice(treeAreaChoices, currentTurn);
+                    treeChoice = makeChoice(treeAreaChoices);
                     switch (treeChoice) {
                         case 1:
                             treeChoices.push_back(1);

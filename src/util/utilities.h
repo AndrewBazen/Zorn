@@ -1,8 +1,3 @@
-#include <iostream>
-#include <chrono>
-#include <thread>
-#include <cstdlib>
-#include <array>
 #include <vector>
 #include <string>
 
@@ -12,6 +7,8 @@ void printSlow(std::string);
 
 void printRedAndSlow(std::string);
 
-int makeChoice(std::vector<std::string>, int);
+void waitForInput(const std::string& prompt = "Press Enter to continue");
+
+int makeChoice(std::vector<std::string>);
 
 int makeAdjustedChoice(std::vector<std::string>, std::vector<int>);
