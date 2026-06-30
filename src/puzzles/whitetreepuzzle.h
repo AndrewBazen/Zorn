@@ -1,4 +1,4 @@
-#include "utilities.h"
+#include "util/utilities.h"
 
 
 int whiteTreePuzzle(int);

@@ -1,5 +1,5 @@
-// scratch test — g++ -std=c++20 _parsertest.cpp parser.cpp -o ptest && ./ptest
-#include "parser.h"
+// Parser regression harness — build with `make ptest` (see Makefile).
+#include "parser/parser.h"
 #include <iostream>
 
 int main() {

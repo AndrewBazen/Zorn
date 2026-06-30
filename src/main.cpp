@@ -1,8 +1,8 @@
-#include "whitetreepuzzle.h"
-#include "campfireriddle.h"
-#include "streampuzzle.h"
-#include "utilities.h"
-#include "gamestate.h"
+#include "puzzles/whitetreepuzzle.h"
+#include "puzzles/campfireriddle.h"
+#include "puzzles/streampuzzle.h"
+#include "util/utilities.h"
+#include "world/gamestate.h"
 
 int main() {
     Gamestate gamestate = new Gamestate();

@@ -1,6 +1,6 @@
 #include "gamestate.h"
 #include "choice.h"
-#include "utilities.h"
+#include "util/utilities.h"
 #include <iostream>
 
 template <class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
