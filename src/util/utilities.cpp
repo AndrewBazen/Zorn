@@ -18,7 +18,7 @@
 *
 * @param currentTurn - the players current turn number
 */
-void clearScreen() {
+void clearScreen(int /*currentTurn*/) {   // param kept to match header/callers; unused for now
     try {
         if (system("cls")) system("clear");
     } catch (...) {
@@ -31,7 +31,6 @@ void clearScreen() {
 * @param text - the string to be printed 
 */
 void printSlow(std::string text) {
-    clearScreen();
     for (int i = 0; i < text.length(); i++) {
         std::cout << text[i];
         std::cout.flush();
