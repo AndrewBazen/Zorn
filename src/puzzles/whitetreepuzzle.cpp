@@ -6,6 +6,7 @@
 */
 
 #include "whitetreepuzzle.h"
+#include "world/puzzle.h"
 #include <iostream>
 #include <thread>
 #include <chrono>
@@ -17,14 +18,13 @@
 * @return result - returns a number based on if the player solves the puzzle,
 *                  leaves, or loses the game.
 */
-int whiteTreePuzzle(int currentTurn) {
+PuzzleResult whiteTreePuzzle() {
     std::vector<std::string> treeAreaChoices = { // main area choices
         "Drink the liquid",
         "Examine the trees",
         "Examine the pedestal",
         "Leave the clearing"
     };
-
     
     std::vector<std::string> treePuzzleChoices = { // choices in the puzzle
         "Touch the cresent moon tree",
@@ -34,25 +34,17 @@ int whiteTreePuzzle(int currentTurn) {
     };
     
     std::vector<int> treeChoices;
-    bool leaveTrees = false;
-    bool gameOver = false;
     bool puzzleSolved = false;
-    int result = 0;
     int treeAreaChoice = 0;
     int treeChoice = 0;
     int puzzleChances = 3;
-    clearScreen(currentTurn);
-    printSlow("You find yourself in a small clearing with three pure-white\n"
-    "leafless trees in the center. The trees are arranged in a triangle, with\n" 
-    "a small pedestal in the center. On the pedestal, there is a silver bowl\n" 
-    "filled to the brim with a dark red liquid.\n");
     
     // If the puzzle isn't solved and the player hasn't failed, then loop.
-    while (!puzzleSolved && !gameOver) {
+    while (!puzzleSolved) {
         treeAreaChoice = makeChoice(treeAreaChoices);
         switch (treeAreaChoice) {
             case 1:
-                clearScreen(currentTurn);
+                clearScreen(0);
                 printSlow("You take a sip of the liquid, and feel a warm sensation\n" 
                 "spread through your body. it tastes warm and sweet like the juice\n" 
                 "of a fruit, but as you look down at your self, you notice that the\n" 
@@ -61,21 +53,18 @@ int whiteTreePuzzle(int currentTurn) {
                 "entire body as you begin to cough and choke on the blood. You fall\n" 
                 "to the ground, your vision blurring as the darkness consumes you.\n");
                 printRedAndSlow("Game Over\n");
-                printSlow("press any key to continue...");
-                system("pause");
-                puzzleSolved = true;
-                break;
+                std::this_thread::sleep_for(std::chrono::seconds(2));
+                return Died;
             case 2:
-                clearScreen(currentTurn);
+                clearScreen(0);
                 printSlow("You examine the trees, and notice that each tree has a\n"
                 "small symbol carved into its trunk. The first tree has a crescent\n"
                 "moon, the second tree has a sun, and the third tree has a star.\n"
                 "You feel a sense of connection to the symbols, and know that they\n"
                 "hold the key to the puzzle.\n");
-                leaveTrees = false;
 
                 // If the player still has chances and they haven't decided to leave, loop.
-                while (puzzleChances > 0 && !leaveTrees) {
+                while (puzzleChances > 0) {
                     treeChoice = makeChoice(treeAreaChoices);
                     switch (treeChoice) {
                         case 1:
@@ -91,9 +80,7 @@ int whiteTreePuzzle(int currentTurn) {
                                 "instead of the liquid there is a white crystal that is glowing\n"
                                 "You pick up the crystal and feel a sense of power and strength\n" 
                                 "flow through you.\n");
-                                puzzleSolved = true;
-                                result = 1;
-                                break;
+                                return Solved;
                             } else if (treeChoices.size() != 3) {
                                 printSlow("You touch the crescent moon tree, and the symbol glows\n"
                                 "with a soft white light.\n");
@@ -134,10 +121,9 @@ int whiteTreePuzzle(int currentTurn) {
                             }
                         case 4:
                             // Allows the player to go back.
-                            clearScreen(currentTurn);
+                            clearScreen(0);
                             printSlow("you leave the trees, and you are back in front of the pedestal.\n");
-                            leaveTrees = true;
-                            break;
+                            return Left;
                         default:
                             std::cout << "Invalid choice. Please try again.\n";
                             break;
@@ -145,36 +131,20 @@ int whiteTreePuzzle(int currentTurn) {
                 } 
                 // Checks to see if the player has run out of chances to solve 
                 // the puzzle and returns game over if so.
-                if (puzzleChances == 0 && !leaveTrees) {
-                    gameOver = true;
-                    clearScreen(currentTurn);
+                if (puzzleChances == 0) {
+                    clearScreen(0);
                     printSlow("The trees go dark and the ground beneath you begins to\n"
                     "shake violently and crack beneath you.\n");
                     printRedAndSlow("You are unable to get away as you fall to darkness.\n"
                     "Game Over\n");
                     std::this_thread::sleep_for(std::chrono::seconds(2));
-                    std::cout << "Press any key to continue...";
-                    system("read");
+                    return Died;
                 }
-                break;
-            case 3:
-                clearScreen(currentTurn);
-                printSlow("You examine the pedestal, and notice that there is a\n" 
-                "small inscription carved into the base. It reads: 'To find the\n" 
-                "light, follow the path of the stars, and the eternal night will\n" 
-                "be banished. You feel a sense of understanding, and know that\n" 
-                "the answer lies in the symbols on the trees.\n");
-                break;
-            case 4:
-                clearScreen(currentTurn);
-                printSlow("You decide to leave the clearing and continue on your\n" 
-                "journey.\n");
-                result = 2;
                 break;
             default:
                 std::cout << "Invalid choice. Please try again.\n";
                 break;
         }
     }
-    return result;
+    return Left;
 }

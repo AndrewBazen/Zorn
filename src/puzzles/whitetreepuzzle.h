@@ -1,4 +1,5 @@
 #include "util/utilities.h"
+#include "world/puzzle.h"
 
 
-int whiteTreePuzzle(int);
+PuzzleResult whiteTreePuzzle();

@@ -1,7 +1,7 @@
 #include "gamestate.h"
-#include "choice.h"
 #include "parser/parser.h"
 #include "puzzles/whitetreepuzzle.h"
+#include "world/puzzle.h"
 #include <iostream>
 #include <string>
 
@@ -34,7 +34,6 @@ void Gamestate::loadAreas() {
     areas.emplace("wolf-statue", Area{
         "You stand before a weathered stone wolf. A Path leads off to either side.\n\n",
         "You're back at the statue of the wolf.\n\n",
-        "solved desc. placeholder",
         {
             { "west", "white-tree" },
             { "east", "stream"},
@@ -47,11 +46,22 @@ void Gamestate::loadAreas() {
         "filled to the brim with a dark red liquid.\n\n",
         "You are back in the clearing with the white trees and the\n" 
                         "pedestal, which is now empty.\n\n",
-                        "solved desc. placeholder",
         {
             { "north", "stream" },
             { "east", "wolf-statue" },
+        },
+        {
+            { "examine trees", "white-tree-puzzle" },
+        },
+        {
+            { "examine pedestal", 
+                "You examine the pedestal, and notice that there is a\n" 
+                "small inscription carved into the base. It reads: 'To find the\n" 
+                "light, follow the path of the stars, and the eternal night will\n" 
+                "be banished. You feel a sense of understanding, and know that\n" 
+                "the answer lies in the symbols on the trees.\n", }
         }
+
     });
     areas.emplace("stream", Area{
         "After traveling for what feels like hours, you find yourself at a stream that cuts through the path.\n"
@@ -59,17 +69,18 @@ void Gamestate::loadAreas() {
         "There is a small wooden sign off to the edge of the path that has some words written on it, and you can now see\n"
         "that just below the surface of the water, there are stepping stones that lead to the other side.\n\n",
         "You are back at the stream with the stepping stones, a wooden sign still stands to the side.\n\n",
-        "solved desc. placeholder",
         {
             { "north", "campfire" },
             { "south", "wolf-statue" },
             { "west", "white-tree" },
-        }
+        },
+
     });
 }
 
 void Gamestate::loadPuzzles() {
-   
+   puzzles.emplace("white-tree-puzzle", 
+    Puzzle{ whiteTreePuzzle, "brilliant-crystal"});
 }
 
 Area& Gamestate::here() {
@@ -86,12 +97,12 @@ void Gamestate::moveTo(const std::string& dest) {
     currentArea = dest;
 }
 
-void Gamestate::runPuzzle(const InitiatePuzzle& p) {
-    switch (puzzles.at(p.puzzleId)(*this)) {
+void Gamestate::runPuzzle(const std::string& id) {
+    Puzzle& p = puzzles.at(id);
+    switch (p.puzzleFunction()) {
         case PuzzleResult::Solved:
-            here().solved = true;
+            p.solved = true;
             if (!p.rewardItem.empty()) bag.add(items.at(p.rewardItem));
-            moveTo(p.onSolve);
             break;
         case PuzzleResult::Left: break;
         case PuzzleResult::Died: gameOver = true; break;
@@ -99,7 +110,6 @@ void Gamestate::runPuzzle(const InitiatePuzzle& p) {
 }
 
 void Gamestate::handleTimedEvents() {
-    // TODO: wolf timer
     if (allArtifactsFound()) {
 
         clearScreen(currentTurn);
@@ -165,8 +175,7 @@ bool Gamestate::allArtifactsFound() const {
 
 std::string Gamestate::describe(const Area& area) const {
     if (!area.visited) return area.description;
-    if (!area.solved) return area.visitedDescription;
-    return area.solvedDescription;
+    return area.visitedDescription;
 }
 
 void Gamestate::run() {
@@ -187,7 +196,15 @@ void Gamestate::run() {
         Command cmd = parseCommand(line);
 
         Area& area = here();
-        if (cmd.verb == "go") {
+
+        std::string verbNounCmd = cmd.verb + " " + cmd.noun;
+        auto trigger = area.triggers.find(verbNounCmd);
+        auto prompt = area.prompts.find(verbNounCmd);
+        if (trigger != area.triggers.end() && puzzles.contains(trigger->second) && !puzzles.at(trigger->second).solved) {
+            runPuzzle(trigger->second);
+        } else if (prompt != area.prompts.end()) {
+            std::cout << prompt->second;
+        } else if (cmd.verb == "go") {
             auto it = area.exits.find(cmd.noun);
             if (it == area.exits.end() || !areas.contains(it->second)) { 
                 std::cout << "You can't go that way.\n"; 

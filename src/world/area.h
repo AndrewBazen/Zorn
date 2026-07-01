@@ -6,8 +6,8 @@
 struct Area {
     std::string description;
     std::string visitedDescription;
-    std::string solvedDescription;
     std::map<std::string, std::string> exits;
+    std::map<std::string, std::string> triggers;
+    std::map<std::string, std::string> prompts;
     bool visited = false;   // have we been here before? (gates full vs. brief description)
-    bool solved = false;    // puzzle state, set by runPuzzle
 };
