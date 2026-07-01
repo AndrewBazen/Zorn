@@ -1,13 +1,13 @@
 #pragma once
 
 #include <string>
-#include <vector>
-#include "choice.h"
+#include <map>
 
 struct Area {
     std::string description;
     std::string visitedDescription;
-    std::vector<Choice> choices;
-    bool solved = false;
-    bool visited = false;
+    std::string solvedDescription;
+    std::map<std::string, std::string> exits;
+    bool visited = false;   // have we been here before? (gates full vs. brief description)
+    bool solved = false;    // puzzle state, set by runPuzzle
 };

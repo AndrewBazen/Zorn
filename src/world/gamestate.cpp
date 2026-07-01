@@ -1,7 +1,9 @@
 #include "gamestate.h"
 #include "choice.h"
+#include "parser/parser.h"
 #include "puzzles/whitetreepuzzle.h"
 #include <iostream>
+#include <string>
 
 template <class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
 template <class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
@@ -30,25 +32,38 @@ void Gamestate::loadItems() {
 
 void Gamestate::loadAreas() {
     areas.emplace("wolf-statue", Area{
-        "You stand before a weathered stone wolf. A Path leads off to either side.",
-        "You're back at the statue of the wolf.",
+        "You stand before a weathered stone wolf. A Path leads off to either side.\n\n",
+        "You're back at the statue of the wolf.\n\n",
+        "solved desc. placeholder",
         {
-            Choice{ "Take the path to the left", Navigate{"white-tree"} },
-            Choice{ "Take the path to the right", Navigate{"stream"} },
+            { "west", "white-tree" },
+            { "east", "stream"},
         }
     });
     areas.emplace("white-tree", Area{
         "You find yourself in a small clearing with three pure-white\n"
         "leafless trees in the center. The trees are arranged in a triangle, with\n" 
         "a small pedestal in the center. On the pedestal, there is a silver bowl\n" 
-        "filled to the brim with a dark red liquid.\n",
+        "filled to the brim with a dark red liquid.\n\n",
         "You are back in the clearing with the white trees and the\n" 
-                        "pedestal, which is now empty.\n",
+                        "pedestal, which is now empty.\n\n",
+                        "solved desc. placeholder",
         {
-            Choice{ "", Navigate{"white-tree"} },
-            Choice{ "Take the path to the right", Navigate{"stream"} },
-            Choice{ "Take the path to the rig", Navigate{"stream"} },
-            Choice{ "Take the path to the right", Navigate{"stream"} },
+            { "north", "stream" },
+            { "east", "wolf-statue" },
+        }
+    });
+    areas.emplace("stream", Area{
+        "After traveling for what feels like hours, you find yourself at a stream that cuts through the path.\n"
+        "The stream is too deep and fast to wade through and it is too wide to jump directly across.\n"
+        "There is a small wooden sign off to the edge of the path that has some words written on it, and you can now see\n"
+        "that just below the surface of the water, there are stepping stones that lead to the other side.\n\n",
+        "You are back at the stream with the stepping stones, a wooden sign still stands to the side.\n\n",
+        "solved desc. placeholder",
+        {
+            { "north", "campfire" },
+            { "south", "wolf-statue" },
+            { "west", "white-tree" },
         }
     });
 }
@@ -66,15 +81,9 @@ void Gamestate::nextTurn() {
 }
 
 void Gamestate::moveTo(const std::string& dest) {
+    here().visited = true;
     history.push_back(currentArea);
     currentArea = dest;
-}
-
-void Gamestate::applyEffect(const Choice::Effect& e) {
-    std::visit(overloaded{
-        [&](const Navigate& n)       { moveTo(n.destination); },
-        [&](const InitiatePuzzle& p) { runPuzzle(p); },
-    }, e);
 }
 
 void Gamestate::runPuzzle(const InitiatePuzzle& p) {
@@ -146,14 +155,6 @@ void Gamestate::handleTimedEvents() {
     }
 }
 
-std::vector<std::string> labelsOf(const std::vector<Choice>& c) {
-    std::vector<std::string> labels;
-    for (const Choice& choice : c) {
-        labels.push_back(choice.label);
-    }
-    return labels;
-}
-
 bool Gamestate::allArtifactsFound() const {
     for (const auto& [id, item] : items) {
         if (!item.isArtifact) continue;
@@ -162,19 +163,44 @@ bool Gamestate::allArtifactsFound() const {
     return true;
 }
 
+std::string Gamestate::describe(const Area& area) const {
+    if (!area.visited) return area.description;
+    if (!area.solved) return area.visitedDescription;
+    return area.solvedDescription;
+}
+
 void Gamestate::run() {
     currentArea = "wolf-statue";
-    while (gameOver == false) {
-        Area& area = here();
+    std::string shownArea;
 
-        std::cout << (area.visited ? area.visitedDescription
-                                   : area.description);
-        area.visited = true;
+    while (gameOver == false) {
+        if (currentArea != shownArea) {
+            std::cout << describe(here());
+            shownArea = currentArea;
+        }
 
         handleTimedEvents();
 
-        int idx = makeChoice(labelsOf(area.choices));
-        applyEffect(area.choices[idx - 1].effect);   // makeChoice is 1-based
+        std::cout << "> ";
+        std::string line;
+        if (!std::getline(std::cin, line)) { gameOver = true; break; }  // EOF (e.g. Ctrl+Z) → end cleanly
+        Command cmd = parseCommand(line);
+
+        Area& area = here();
+        if (cmd.verb == "go") {
+            auto it = area.exits.find(cmd.noun);
+            if (it == area.exits.end() || !areas.contains(it->second)) { 
+                std::cout << "You can't go that way.\n"; 
+            } else {
+                moveTo(it->second);
+            }
+        } else if (cmd.verb == "look") {
+            std::cout << describe(area);
+        } else if (cmd.verb == "quit") {
+            gameOver = true;
+        } else {
+            std::cout << "I don't understand that.\n";
+        }
 
         nextTurn();
     }

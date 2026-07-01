@@ -35,4 +35,5 @@ class Gamestate {
         void runPuzzle(const InitiatePuzzle&);
         void handleTimedEvents();
         bool allArtifactsFound() const;
+        std::string describe(const Area&) const;
 };

@@ -6,8 +6,10 @@
 */
 
 #include "utilities.h"
+#include <ios>
 #include <iostream>
 #include <chrono>
+#include <limits>
 #include <thread>
 #include <array>
 #include <atomic>
@@ -103,47 +105,6 @@ int makeChoice(std::vector<std::string> choices) {
             printf("\e[1A\e[2K\r");
         }
     }
-    return choice;
-}
-
-/* makeAdjustedChoice - prompts the user to make a choice based on the input 
-* choices and a predetermined order.
-*
-* @param choices - a vector of strings that will be printed to the player
-* @param order - the order of the questions
-* @return choice - the number of the choice the player chose.
-*/
-int makeAdjustedChoice(std::vector<std::string> choices, std::vector<int> order) 
-{
-    int choice = 0;
-    bool valid = false;
-    std::cout << "---------------------------------------------------\n";
-    for (int i = 0; i < order.size(); i++) {
-        std::cout << i + 1 << ". " << choices[order[i]] << "\n";
-    }
-    std::cout << "---------------------------------------------------\n";
-    while (!valid) {
-        std::cout << "Enter your choice: ";
-        try {
-            std::cin >> choice;
-            if (choice > 0 && choice <= choices.size()) {
-                valid = true;
-            } else {
-                std::cout << "\033[31m" << "  Invalid choice. Please try again." 
-                << "\033[0m";
-                std::cout.flush();
-                std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-                printf("\e[2K");
-                printf("\e[1A\e[2K\r");
-            }
-        } catch (...) {
-            std::cout << "\033[1;31m" << "  Invalid choice. Please try again." 
-            << "\033[0m";
-            std::cout.flush();
-            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-            printf("\e[2K");
-            printf("\e[1A\e[2K\r");
-        }
-    }
+    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
     return choice;
 }
