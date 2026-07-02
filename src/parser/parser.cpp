@@ -41,6 +41,12 @@ const std::unordered_map<std::string, std::string> kSynonyms = {
     // TODO: add your verbs and their synonyms
 };
 
+const std::unordered_map<std::string, std::string> kVerbPhrases = {
+    {"look at", "examine"},
+    {"pick up", "take"},
+    {"put down", "drop"},
+};
+
 // Lowercase an entire string. (Worked example — match this style for the rest.)
 std::string toLower(std::string s) {
     std::transform(s.begin(), s.end(), s.begin(),
@@ -93,13 +99,17 @@ Command parseCommand(const std::string& input) {
     // 3. Nothing left? Empty verb signals "blank line" to the caller.
     if (words.empty()) return cmd;
 
+    if (words.size() >= 2) {
+        std::string pair = words[0] + " " + words[1];
+        if (kVerbPhrases.contains(pair)) {
+            words[0] = kVerbPhrases.at(pair);
+            words.erase(words.begin() + 1);
+        }
+    }
+
     // 4. The first word is the verb. Canonicalize it.
     //    Special case: a bare direction ("north", or "n" -> "north") really
     //    means "go north" — rewrite it to verb="go", noun=<direction>.
-    // TODO:
-    //   - std::string head = canonical(words[0]);
-    //   - if head is in kDirections: cmd.verb = "go"; cmd.noun = head; return cmd;
-    //   - else: cmd.verb = head;  (then the rest of `words` is the object phrase)
     std::string head = canonical(words[0]);
     if (kDirections.contains(head)) {
         cmd.verb = "go";
@@ -114,12 +124,6 @@ Command parseCommand(const std::string& input) {
     //      the prep itself -> prep
     //      after the prep  -> object2    (indirect object)
     //    If there's no preposition, everything after the verb is the noun.
-    // TODO:
-    //   - scan words[1..] for the first token that's in kPrepositions
-    //   - found at index p:  cmd.noun = join(words, 1, p);
-    //                        cmd.prep = words[p];
-    //                        cmd.object2 = join(words, p + 1, words.size());
-    //   - not found:         cmd.noun = join(words, 1, words.size());
    bool foundPrep = false;
     for (size_t i = 1; i < words.size(); i++) {
         if (kPrepositions.contains(words[i])) {
