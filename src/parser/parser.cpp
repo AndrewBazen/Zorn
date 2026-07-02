@@ -45,6 +45,7 @@ const std::unordered_map<std::string, std::string> kVerbPhrases = {
     {"look at", "examine"},
     {"pick up", "take"},
     {"put down", "drop"},
+    {"go back", "leave"},
 };
 
 // Lowercase an entire string. (Worked example — match this style for the rest.)

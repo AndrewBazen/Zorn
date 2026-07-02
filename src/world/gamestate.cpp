@@ -1,6 +1,8 @@
 #include "gamestate.h"
 #include "parser/parser.h"
 #include "puzzles/whitetreepuzzle.h"
+#include "puzzles/streampuzzle.h"
+#include "puzzles/campfireriddle.h"
 #include "util/utilities.h"
 #include "world/action.h"
 #include "world/puzzle.h"
@@ -84,13 +86,44 @@ void Gamestate::loadAreas() {
             { "south", "wolf-statue" },
             { "west", "white-tree" },
         },
-
+        {  // actions
+            { "read sign",
+                Action{ ActionResult::Info,
+                    "The wooden sign has a verse burned into it:\n"
+                    "  dark and cold the River flows, ominously the trees Leaves blow\n"
+                    "  Look below the surface found, a helping hand, solid and Round\n"
+                    "  a leap of faith is needed to cross, but one is gain and one is Loss\n\n",
+                    "", "" } },
+            { "cross stream",
+                Action{ ActionResult::Effect, "", "stream", "" } },
+        }
+    });
+    areas.emplace("campfire", Area{
+        "The path opens onto a small campfire burning in a clearing. A hooded\n"
+        "figure sits close to the flames, its face lost in shadow. A crooked sign\n"
+        "points left — 'The Path of the Warrior' — and another right — 'The Path\n"
+        "of the Scholar'.\n\n",
+        "You are back at the campfire. The hooded figure still sits by the flames.\n\n",
+        {
+            { "south", "stream" },
+        },
+        {  // actions
+            { "approach figure",
+                Action{ ActionResult::Effect, "", "campfire", "" } },
+            { "examine fire",
+                Action{ ActionResult::Info,
+                    "You gaze into the fire. In the coals a shape moves — a wolf running\n"
+                    "down a rabbit through the trees. The rabbit is caught and devoured,\n"
+                    "and the shapes collapse back into embers.\n\n",
+                    "", "" } },
+        }
     });
 }
 
 void Gamestate::loadPuzzles() {
-   puzzles.emplace("white-tree-puzzle", 
-    Puzzle{ whiteTreePuzzle, "brilliant-crystal"});
+    puzzles.emplace("white-tree-puzzle", Puzzle{ whiteTreePuzzle, "brilliant-crystal" });
+    puzzles.emplace("stream-puzzle",     Puzzle{ streamPuzzle,    "sword-of-light" });
+    puzzles.emplace("campfire-puzzle",   Puzzle{ campfireRiddle,  "ancient-tome" });
 }
 
 void Gamestate::loadEffects() {
@@ -99,6 +132,8 @@ void Gamestate::loadEffects() {
         g.gameOver = true;
     };
     effects["white-tree"] = [](Gamestate& g) { g.runPuzzle("white-tree-puzzle"); };
+    effects["stream"]     = [](Gamestate& g) { g.runPuzzle("stream-puzzle"); };
+    effects["campfire"]   = [](Gamestate& g) { g.runPuzzle("campfire-puzzle"); };
 }
 
 void Gamestate::applyEffect(const std::string& effect) {

@@ -1,3 +1,5 @@
-#include "util/utilities.h"
+#pragma once
 
-int streamPuzzle(int);
+#include "world/puzzle.h"
+
+PuzzleResult streamPuzzle();

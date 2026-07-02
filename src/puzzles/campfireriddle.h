@@ -1,4 +1,5 @@
-#include "util/utilities.h"
+#pragma once
 
-int campfireRiddle(int);
-int campfireAreaReturn(int, int, int);
+#include "world/puzzle.h"
+
+PuzzleResult campfireRiddle();

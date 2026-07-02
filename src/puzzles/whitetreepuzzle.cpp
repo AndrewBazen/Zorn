@@ -6,10 +6,22 @@
 */
 
 #include "whitetreepuzzle.h"
+#include "util/utilities.h"
+#include "parser/parser.h"
 #include "world/puzzle.h"
+#include <format>
 #include <iostream>
-#include <thread>
-#include <chrono>
+#include <string>
+#include <vector>
+
+namespace {
+	std::string treeFrom(const std::string& noun) {
+		if (noun.find("sun") != std::string::npos) return "sun";
+		if (noun.find("star") != std::string::npos) return "star";
+		if (noun.find("moon") != std::string::npos) return "moon";
+		return "";
+	}
+}
 
 /* whiteTreePuzzle - runs a puzzle for the player to solve by touching 3 trees
 * in the correct order.
@@ -19,132 +31,91 @@
 *                  leaves, or loses the game.
 */
 PuzzleResult whiteTreePuzzle() {
-    std::vector<std::string> treeAreaChoices = { // main area choices
-        "Drink the liquid",
-        "Examine the trees",
-        "Examine the pedestal",
-        "Leave the clearing"
-    };
-    
-    std::vector<std::string> treePuzzleChoices = { // choices in the puzzle
-        "Touch the cresent moon tree",
-        "Touch the sun tree",
-        "Touch the star tree",
-        "Leave the trees"
-    };
-    
-    std::vector<int> treeChoices;
-    bool puzzleSolved = false;
-    int treeAreaChoice = 0;
-    int treeChoice = 0;
-    int puzzleChances = 3;
-    
-    // If the puzzle isn't solved and the player hasn't failed, then loop.
-    while (!puzzleSolved) {
-        treeAreaChoice = makeChoice(treeAreaChoices);
-        switch (treeAreaChoice) {
-            case 1:
-                clearScreen(0);
-                printSlow("You take a sip of the liquid, and feel a warm sensation\n" 
-                "spread through your body. it tastes warm and sweet like the juice\n" 
-                "of a fruit, but as you look down at your self, you notice that the\n" 
-                "liquid on your hands is deep red blood. You feel a sudden sense of\n" 
-                "dread, and know that you have made a grave mistake. Pain grips your\n" 
-                "entire body as you begin to cough and choke on the blood. You fall\n" 
-                "to the ground, your vision blurring as the darkness consumes you.\n");
-                printRedAndSlow("Game Over\n");
-                std::this_thread::sleep_for(std::chrono::seconds(2));
-                return Died;
-            case 2:
-                clearScreen(0);
-                printSlow("You examine the trees, and notice that each tree has a\n"
-                "small symbol carved into its trunk. The first tree has a crescent\n"
-                "moon, the second tree has a sun, and the third tree has a star.\n"
-                "You feel a sense of connection to the symbols, and know that they\n"
-                "hold the key to the puzzle.\n");
+	int chances = 3;
+	std::vector<std::string> answer = { "sun", "star", "moon" };
+	std::vector<std::string> touched;
+	
+	printSlow("You examine the trees, and notice that each tree has a\n"
+	"small symbol carved into its trunk. The first tree has a moon,\n"
+	"the second tree has a sun, and the third tree has a star.\n"
+	"You feel a sense of connection to the symbols, and know that they\n"
+	"hold the key to the puzzle.\n\n");
 
-                // If the player still has chances and they haven't decided to leave, loop.
-                while (puzzleChances > 0) {
-                    treeChoice = makeChoice(treeAreaChoices);
-                    switch (treeChoice) {
-                        case 1:
-                            treeChoices.push_back(1);
-                            // Checks to see if the choice vector is filled with the correct sequence
-                            // and solves the puzzle if it is.
-                            if (treeChoices.size() == 3 && treeChoices[0] == 2 && treeChoices[1] == 3 
-                                && treeChoices[2] == 1){
-                                printSlow("You touch the first tree, and feel a surge of energy\n" 
-                                "flow through you. The tree begins to glow with a soft white\n" 
-                                "light, and you feel a sense of peace and calm wash over you.\n"
-                                "As you look back at the bowl on the pedestal, you notice that\n" 
-                                "instead of the liquid there is a white crystal that is glowing\n"
-                                "You pick up the crystal and feel a sense of power and strength\n" 
-                                "flow through you.\n");
-                                return Solved;
-                            } else if (treeChoices.size() != 3) {
-                                printSlow("You touch the crescent moon tree, and the symbol glows\n"
-                                "with a soft white light.\n");
-                                break;
-                            } else {
-                                printSlow("You touch the crescent moon tree, but as you do, the\n"
-                                "earth below your feet begins to shake and the light of the trees\n"
-                                "grows dimmer.\n");
-                                treeChoices.clear();
-                                puzzleChances--;
-                                break;
-                            }
-                        case 2:
-                            treeChoices.push_back(2);
-                            if (treeChoices.size() != 3){
-                                printSlow("You touch the sun tree, and the symbol glows with a\n"
-                                "soft white light.\n");
-                                break;
-                            } else {
-                                printSlow("You touch the sun tree, but as you do, the earth below\n"
-                                "your feet begins to shake and the light of the trees grows dimmer.\n");
-                                treeChoices.clear();
-                                puzzleChances--;
-                                break;
-                            }
-                        case 3:
-                            treeChoices.push_back(3);
-                            if (treeChoices.size() != 3){
-                                printSlow("You touch the star tree, and the symbol glows with a\n"
-                                "soft white light.\n");
-                                break;
-                            } else {
-                                printSlow("You touch the star tree, but as you do, the earth below\n" 
-                                "your feet begins to shake and the light of the trees grows dimmer.\n");
-                                treeChoices.clear();
-                                puzzleChances--;
-                                break;
-                            }
-                        case 4:
-                            // Allows the player to go back.
-                            clearScreen(0);
-                            printSlow("you leave the trees, and you are back in front of the pedestal.\n");
-                            return Left;
-                        default:
-                            std::cout << "Invalid choice. Please try again.\n";
-                            break;
-                    }
-                } 
-                // Checks to see if the player has run out of chances to solve 
-                // the puzzle and returns game over if so.
-                if (puzzleChances == 0) {
-                    clearScreen(0);
-                    printSlow("The trees go dark and the ground beneath you begins to\n"
-                    "shake violently and crack beneath you.\n");
-                    printRedAndSlow("You are unable to get away as you fall to darkness.\n"
-                    "Game Over\n");
-                    std::this_thread::sleep_for(std::chrono::seconds(2));
-                    return Died;
-                }
-                break;
-            default:
-                std::cout << "Invalid choice. Please try again.\n";
-                break;
-        }
-    }
-    return Left;
+	while (true) {
+		std::cout << "> ";
+		std::string line;
+		if (!std::getline(std::cin, line)) return Left;   // EOF (Ctrl-D) -> leave the puzzle
+		Command cmd = parseCommand(line);
+		
+		std::string tree = treeFrom(cmd.noun);
+		if (cmd.verb == "touch") {
+			if (!tree.empty()) {
+				if (tree == answer[touched.size()]) {
+					touched.push_back(tree);
+					if (touched.size() == answer.size()) {
+						printSlow(std::format("You touch the {} tree, and feel a surge of energy\n"
+											"flow through you.  All the trees begin to shine brightly,\n"
+											"and you feel a sense of peace and calm wash over you.\n"
+											"As you look back at the bowl on the pedestal, you notice\n"
+											"that the red liquid that was there before has been replaced\n"
+											"by a brilliant, white crystal.  You pick up the crystal and \n"
+											"feel power and strength flood into you.\n\n", tree));
+						return Solved;
+					} else {
+						printSlow(std::format("You touch the {} tree, and the symbol glows with a soft\n"
+											"white light.\n\n", tree));
+					}
+				} else {
+					touched.clear();
+					--chances;
+					if (chances > 0) {
+						printSlow(std::format("You touch the {} tree, but as you do, the\n"
+						"earth below your feet begins to shake and the light of the trees\n"
+						"grows dimmer.\n\n", tree));
+					} else {
+						printSlow("The trees go dark and the ground beneath you begins to\n"
+						"shake violently and crack beneath you.\n\n");
+						printRedAndSlow("You are unable to get away as you fall to darkness.\n\n");
+						return Died;
+					}
+				}
+			} else { 
+				if (cmd.noun == "liquid") {
+					printSlow("You dip your fingers into the dark red liquid, and it is ice cold. As you pull\n"
+							"your fingers out of the liquid you notice that it's blood.  Before you are able to\n"
+							"wipe it off, it starts too violently shift and extend up your arm, causing you to drop\n"
+							"to the ground and convulse and the icy blood completely engulfs you. Just as the liquid\n"
+							"reaches your chest, you pass out from the pain.\n\n");
+
+					waitForInput("Press Enter to continue");
+					// would like to tie this back to the player as a blood curse or a secret pathway to a different ending maybe.
+					// But it is just world flair for now.
+					printSlow("You awaken beside the pedestal, but there is no blood on you anymore.  You stand up\n"
+							"and look in the bowl, but it is now just an empty silver bowl.\n\n");
+				} else {
+					printSlow("Nothing happens.\n\n");
+				}
+			}
+		} else if (cmd.verb == "leave") {
+			return Left;
+		} else if (cmd.verb == "examine") {
+			if (!tree.empty()) {
+				printSlow(std::format("A stark white birch tree with a small {} symbol carved\n"
+					"into the trunk.\n\n", tree));
+			} else if (cmd.noun == "pedestal") {
+				printSlow("You examine the pedestal, and notice that there is a\n"
+					"small inscription carved into the base. It reads: 'To find the\n"
+					"light, follow the path of the stars, and the eternal night will\n"
+					"be banished. You feel a sense of understanding, and know that\n"
+					"the answer lies in the symbols on the trees.\n");
+			} else if (cmd.noun == "bowl") {
+				printSlow("A silver bowl filled to the brim with a dark red liquid.\n"
+					"You feel a slight pull as you look at your reflection in it.\n\n");
+			} else {
+				printSlow("Not much to see here.\n\n");
+			}
+		} else {
+			printSlow("You can't do that here.\n\n");
+		}
+	}
 }

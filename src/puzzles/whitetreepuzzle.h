@@ -1,5 +1,5 @@
-#include "util/utilities.h"
-#include "world/puzzle.h"
+#pragma once
 
+#include "world/puzzle.h"
 
 PuzzleResult whiteTreePuzzle();
