@@ -1,17 +1,17 @@
 #include "gamestate.h"
 #include "parser/parser.h"
 #include "puzzles/whitetreepuzzle.h"
+#include "util/utilities.h"
+#include "world/action.h"
 #include "world/puzzle.h"
 #include <iostream>
 #include <string>
-
-template <class... Ts> struct overloaded : Ts... { using Ts::operator()...; };
-template <class... Ts> overloaded(Ts...) -> overloaded<Ts...>;
 
 Gamestate::Gamestate() {
     loadItems();
     loadAreas();
     loadPuzzles();
+    loadEffects();
 }
 
 void Gamestate::loadItems() {
@@ -50,16 +50,26 @@ void Gamestate::loadAreas() {
             { "north", "stream" },
             { "east", "wolf-statue" },
         },
-        {
-            { "examine trees", "white-tree-puzzle" },
-        },
-        {
-            { "examine pedestal", 
-                "You examine the pedestal, and notice that there is a\n" 
-                "small inscription carved into the base. It reads: 'To find the\n" 
-                "light, follow the path of the stars, and the eternal night will\n" 
-                "be banished. You feel a sense of understanding, and know that\n" 
-                "the answer lies in the symbols on the trees.\n", }
+        {  // actions: verb+noun -> Action
+            { "examine trees",
+                Action{ ActionResult::Effect, "", "white-tree", "" } },
+            { "examine pedestal",
+                Action{ ActionResult::Info,
+                    "You examine the pedestal, and notice that there is a\n"
+                    "small inscription carved into the base. It reads: 'To find the\n"
+                    "light, follow the path of the stars, and the eternal night will\n"
+                    "be banished. You feel a sense of understanding, and know that\n"
+                    "the answer lies in the symbols on the trees.\n", "", "" } },
+            { "drink liquid",
+                Action{ ActionResult::Effect,
+                    "You take a sip of the liquid, and feel a warm sensation\n"
+                    "spread through your body. it tastes warm and sweet like the juice\n"
+                    "of a fruit, but as you look down at your self, you notice that the\n"
+                    "liquid on your hands is deep red blood. You feel a sudden sense of\n"
+                    "dread, and know that you have made a grave mistake. Pain grips your\n"
+                    "entire body as you begin to cough and choke on the blood. You fall\n"
+                    "to the ground, your vision blurring as the darkness consumes you.\n",
+                    "die", "" } },
         }
 
     });
@@ -83,6 +93,20 @@ void Gamestate::loadPuzzles() {
     Puzzle{ whiteTreePuzzle, "brilliant-crystal"});
 }
 
+void Gamestate::loadEffects() {
+    effects["die"] = [](Gamestate& g) {
+        printRedAndSlow("Game Over\n\n");
+        g.gameOver = true;
+    };
+    effects["white-tree"] = [](Gamestate& g) { g.runPuzzle("white-tree-puzzle"); };
+}
+
+void Gamestate::applyEffect(const std::string& effect) {
+    auto it = effects.find(effect);
+    if (it != effects.end()) it->second(*this);
+    else std::cerr << "unknown effect: " << effect << "\n";
+}
+
 Area& Gamestate::here() {
     return areas.at(currentArea);
 }
@@ -99,6 +123,7 @@ void Gamestate::moveTo(const std::string& dest) {
 
 void Gamestate::runPuzzle(const std::string& id) {
     Puzzle& p = puzzles.at(id);
+    if (p.solved) return;   // already solved — don't re-run or re-grant the reward
     switch (p.puzzleFunction()) {
         case PuzzleResult::Solved:
             p.solved = true;
@@ -106,6 +131,21 @@ void Gamestate::runPuzzle(const std::string& id) {
             break;
         case PuzzleResult::Left: break;
         case PuzzleResult::Died: gameOver = true; break;
+    }
+}
+
+void Gamestate::runAction(const Action& a) {
+    switch (a.result) {
+        case ActionResult::Info:
+            std::cout << a.output;
+            break;
+        case ActionResult::Gain:
+            if (a.output != "") std::cout << a.output;
+            bag.add(items.at(a.itemToGain));
+            break;
+        case ActionResult::Effect:
+            if (a.output != "") std::cout << a.output;
+            applyEffect(a.effect);
     }
 }
 
@@ -198,12 +238,9 @@ void Gamestate::run() {
         Area& area = here();
 
         std::string verbNounCmd = cmd.verb + " " + cmd.noun;
-        auto trigger = area.triggers.find(verbNounCmd);
-        auto prompt = area.prompts.find(verbNounCmd);
-        if (trigger != area.triggers.end() && puzzles.contains(trigger->second) && !puzzles.at(trigger->second).solved) {
-            runPuzzle(trigger->second);
-        } else if (prompt != area.prompts.end()) {
-            std::cout << prompt->second;
+        auto action = area.actions.find(verbNounCmd);
+        if (action != area.actions.end()) {
+            runAction(action->second);
         } else if (cmd.verb == "go") {
             auto it = area.exits.find(cmd.noun);
             if (it == area.exits.end() || !areas.contains(it->second)) { 
