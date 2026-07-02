@@ -1,0 +1,10 @@
+# Build outputs
+zorn
+zorn.exe
+ptest
+ptest.exe
+*.o
+*.exe.dSYM/
+
+# OS / editor junk
+.DS_Store

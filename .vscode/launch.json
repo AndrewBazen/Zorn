@@ -1,24 +1,34 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    // g++/gdb debug configs. Build is handled by the matching make task.
     "version": "0.2.0",
     "configurations": [
-        
-
         {
-            "name": "C/C++: cl.exe build and debug active file",
-            "type": "cppvsdbg",
+            "name": "Debug game (gdb)",
+            "type": "cppdbg",
             "request": "launch",
-            "program": "${workspaceFolder}\\zorn.exe",
+            "program": "${workspaceFolder}/zorn.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",
             "environment": [],
-            "externalConsole": false,
-            "preLaunchTask": "Build with cl.exe",
-            "console": "newExternalWindow"
+            "externalConsole": true,
+            "MIMode": "gdb",
+            "miDebuggerPath": "C:/msys64/ucrt64/bin/gdb.exe",
+            "preLaunchTask": "make game"
         },
-
+        {
+            "name": "Debug parser test (gdb)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/ptest.exe",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": true,
+            "MIMode": "gdb",
+            "miDebuggerPath": "C:/msys64/ucrt64/bin/gdb.exe",
+            "preLaunchTask": "make ptest"
+        }
     ]
 }
